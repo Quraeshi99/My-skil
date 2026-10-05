@@ -1,4 +1,4 @@
-# 1M RPS Masterclass Full Transcript
+# 1M RPS Masterclass Full Transcript (2+ Hours Untruncated)
 
 [0.08] Hey everyone, I've got a very exciting video 
 for you. In this one, we're going to simulate  
@@ -370,11 +370,2192 @@ going to shut this down so that my recording is  
 it about CPU utilization and multi-threading.
 [996.8] All right, let's get into it. So, let's start from 
 something very, very simple. I have this project  
-[1003.92] here called 
-
-... [OUTPUT TRUNCATED - 117,843 chars omitted out of 167,768 total] ...
-
-05.92] and we have 60 of them. So per month this 
+[1003.92] here called Node 1 million requests per second. 
+You can download it from the GitHub repository  
+[1009.36] right here. I encourage you to also grab the code. 
+I'll add a readme file so that you'll see how to  
+[1014.48] get things set up on your own machine, but you 
+don't really need to do much. Now, here in this  
+[1020.32] code, let's just imagine that we have this very 
+simple route slash simple. And that's it. I have a  
+[1026.72] few other routes here. We're going to go over all 
+of them, but let's not worry about any of them.  
+[1031.28] This is all we have. /simple, and we're going 
+to get a simple JSON response message high. Now,  
+[1038.0] if you are not familiar with node, don't worry 
+about it. It really does not matter. The logic  
+[1043.12] would have been the same with Python, Go, 
+Rust, or JavaSpring, whatever language it  
+[1048.88] is. This is going to be pretty much the same. 
+All right? So, you don't need to worry about  
+[1053.04] it. I'll explain what the code is here. Again, 
+all that's going to happen is a simple JSON. So,  
+[1059.52] I'll go ahead and run this code here. I have 
+navigated to that. So, I'll say node and then  
+[1064.64] express.js. All right. It says server running on 
+this port. And we also get two more logs here that  
+[1072.0] says connected to Redis and Postgress. But let's 
+not worry about them. We're going to come back to  
+[1076.56] Redis and Postgress in the future. Right now, let 
+me go ahead and now send one request. So, I'll go  
+[1082.88] to localhost 3001/simple. And there you go. We 
+get message high. Very straightforward. Now,  
+[1092.72] we're talking about requests per second. So, what 
+does a request here mean? Well, when we say get,  
+[1099.68] we're going to send some amount of zeros and ones 
+to this server right here. And then we're going to  
+[1105.04] get a message back, this JSON. And this whole 
+process here took 12 milliseconds. All right,  
+[1111.84] so very very short. Once we get this status 200 
+back along with the body, we're going to now  
+[1118.96] count this as one request. And now the question 
+is, how many of these can we handle per second?  
+[1125.2] All right, I'm going to go ahead right now 
+and use an application called autocannon. If  
+[1130.4] you don't have it, you got to install Node on 
+your machine. It's very easy. And then run npm  
+[1135.072] i -g autocannon. Right, with this application, 
+here's also the documentation. You can simulate  
+[1144.64] sending thousands and millions of requests to your 
+application. All right, and here's how you use it.  
+[1151.76] All I got to do here is say autocannonand then 
+specify a few options that we're going to talk  
+[1157.6] about. So I'll say dash c number of connections 
+20 dash d meaning duration. I'll say also 20. So  
+[1165.52] for 20 seconds we're going to run this and then 
+-p here meaning pipeline I'll go with two and  
+[1171.12] then specify my complete URL here which is http 
+localhost port 3001 and then / simple. Now let  
+[1181.68] me also specify the method. So that's another 
+option here - m get. Now let me go ahead now  
+[1187.44] and run this. Now what is happening here is that 
+autocannon is going to simulate what we did here.  
+[1193.84] So, it's just like we click on this send many many 
+times per second. Of course, as a human, we can't  
+[1199.2] do it, but a computer can. And we're going to now 
+see how many of these we can handle per second  
+[1204.64] with this express server right here. Now, here we 
+can see that we handled 18,000 requests per second  
+[1211.84] and all of them resulted in a 200 good message. If 
+we do get an error for any of the requests, it's  
+[1217.44] going to be indicated right here. But you can see 
+here that we don't have anything. All right. So,  
+[1222.24] in total, we sent 300,000 requests and we moved 90 
+megabytes of data over our network. All right. So,  
+[1230.64] now I want to give you a quick crash course on 
+autoc counted. So, if you already know how to  
+[1234.64] use it and the results that we just saw make total 
+sense to you, just feel free to skip right ahead.  
+[1239.76] You can use the progress line down below to know 
+where to go. All right. So, we used here dash c20  
+[1245.76] and then dash d and -p. And there's also another 
+option that I want to talk about which is - W,  
+[1252.0] meaning the number of threads that we're going 
+to spawn to run this test from. All right,  
+[1257.12] so this is an important one that we need to talk 
+about because the power machine that we're going  
+[1260.88] to move to in just a bit is going to have many, 
+many cores. So we need to utilize some of these  
+[1266.24] threads to use as many cores as we possibly could. 
+All right. So what just happened here is this.  
+[1274.4] So let's imagine that we're going to go with 
+- C6, number of connections six, pipeline 2,  
+[1280.32] and number of workers two. We have a server. 
+Imagine that in the real world, we're going to  
+[1286.24] have our server somewhere, maybe on Google Cloud 
+or Amazon. And then we also have maybe a client,  
+[1292.24] maybe our own machine, and we're going to 
+generate this traffic using autocannonand  
+[1297.2] send it to the server to benchmark and see 
+how many requests we can handle per second.  
+[1302.96] Now I'm also going to add this here to indicate 
+the network card of the server because whatever  
+[1307.68] request you send through TCP or UDP it's going to 
+be received on the network card of that particular  
+[1314.56] machine. All right. So starting with this - 
+W2 this means that we're going to spawn two  
+[1320.88] threads. All right. So now this means that we 
+can do two things at the same time on our CPU.  
+[1327.6] Then this - C6 means that in total we're going to 
+open up six connections to this server. Right? So  
+[1336.56] six TCP connections in this case and this -p 
+pipelining means how many we're going to send  
+[1343.52] how many requests we're going to send immediately 
+at the same time. All right. So here's what it  
+[1348.48] means. So we have three connections because we 
+have two threads. Each thread is going to open  
+[1354.0] up three connections and -p2 means that each one 
+of these is going to send two requests. All right,  
+[1361.68] so kind of like this. We're going to send one 
+and then immediately after we're going to send  
+[1367.12] another three requests. All right. Now, if -p was 
+maybe six, in that case through each connection,  
+[1373.84] we would send six requests and then wait, get a 
+response and send the next ones. So if you want  
+[1381.84] to know at any given microcond at any given point 
+of time how many requests this server is handling  
+[1388.32] you have to multiply - c by -p. So in this case 
+it's 6 * 2 which is 12. So this means that when we  
+[1395.2] run autocannon with these options this server at 
+any given point of time is handling 12 concurrent  
+[1401.68] requests. Right? Very easy to understand. Right? 
+So back right here this whole thing should now  
+[1407.44] make total sense to you. And also this result that 
+we're going to get, we would only pay attention  
+[1412.0] to this average. So this means on average how 
+many requests we handled per second. We also  
+[1418.32] get a percentile right here because it has done 
+actually 20 samples and not just one test. You  
+[1424.0] also get a few other things here that are easy to 
+understand. For example, here it says that at our  
+[1429.36] worst we handled 16,000 requests per second. All 
+right, but we also managed sometimes to handle up  
+[1436.16] to 18,000. But if we average, it was 18,000. All 
+right. All right. So 18,000 requests per second,  
+[1443.84] but I'm still not utilizing a whole lot of my 
+power. Right. I've got lots of CPU cores. So  
+[1449.68] this current machine that I'm running right now is 
+a Mac Studio, and it has got 12 CPU cores, 32 gigs  
+[1457.04] of RAM, and it has a 10 gig network performance or 
+1.25 GB per second. So, this means how much data  
+[1465.2] I can move towards my network card at any given 
+second. So, if I'm moving a huge amount of data,  
+[1470.24] I'm going to be bounded by my network and not 
+maybe by my CPU or RAM. And also, it costs around  
+[1476.48] $2,000 to buy it. And you can get it now actually 
+by 1,000 or something, but we're just going to go  
+[1482.0] with this. It really doesn't matter if we go with 
+$5,000 or anything else. And if you span it across  
+[1488.0] three years and say that I'm going to have this 
+for three years and you count in the electricity  
+[1492.08] cost, it roughly costs around $60 per month. All 
+right. Now, I'm saying this because we're going  
+[1497.84] to move to some very powerful machines and we're 
+going to see some interesting differences. So,  
+[1502.88] this is the machine that I'm running this right 
+now on and I'm not utilizing much here. All right,  
+[1508.0] I have a bit of overhead here with Express and 
+also when I'm running this, the idle CPU usage is  
+[1513.52] very very high. All right. So, I'm not using half 
+of my CPU. Now, what I'm going to do is check how  
+[1520.24] much overhead we have from the actual framework. 
+All right. Because Express is quite slow. And we  
+[1526.96] have another framework called Fastify. So, 
+here if you take a look at the codebase,  
+[1531.92] we've got three files. So, Cpeak, Express, and 
+Fasify. And they all have the same logic. They  
+[1538.72] all have the same routes. And we just want to do a 
+bit of a benchmark to see which one to go with. We  
+[1544.08] want to go with the fastest possible one to have 
+the raw node performance and not really have too  
+[1549.04] much framework overhead. All right, because we're 
+going to handle a huge amount of requests and even  
+[1554.0] a little bit of improved performance could help 
+us a lot. Now, I'll try it with Fastify.js. So,  
+[1561.04] I'll run it with Fastify, which is another node 
+framework, but they're all very similar. Now,  
+[1566.08] Fastify actually claims to be way faster 
+than Express. And here in the npm page,  
+[1572.56] you can see that they're claiming to be about 
+three times faster than Express. All right. So  
+[1576.96] that's why I'm going to try it with this one 
+as well. That here in the request per second,  
+[1580.88] it gets 77,000 and Express only gets 14,000. So 
+let's see if we can verify that. So I've got this  
+[1587.84] server running and I'm going to go ahead and send 
+this request. I'll change my connection here to  
+[1592.64] five and I'm also going to specify the worker 
+one, which is the default one. So, let's go  
+[1597.6] ahead and send this and I'll fast forward. So, the 
+average was 66,000. And if you recall, the Express  
+[1606.24] one was way, way, way lower than that. So, I'll 
+try it again with Express pretty quick with the  
+[1613.36] exact same arguments that I've got right here. And 
+here we can see that Express was only 20,000. So,  
+[1621.76] yeah, Fastify is actually way faster here in this 
+example compared to Express, right? So we can get  
+[1627.76] rid of the framework overhead by going with 
+fastify. Now there's also another framework  
+[1632.24] that we've got that's Cpeak. This is what we're 
+building ourselves from scratch and it's zero  
+[1636.96] dependency. So it has only 500 lines of code as of 
+now and it's very easy to read. So you can go to  
+[1643.68] the source code. It's quite straightforward. We're 
+not adding much overhead. So let's try it with  
+[1648.48] this one as well. So I'll say node cpeak.js. So 
+this is pretty much close to raw node performance.  
+[1654.4] And then I'm going to run that again. Change 
+my port back to 3000. And I'll fast forward.
+[1665.12] All right. So, I just ran it for two times and 
+here you can see that we got 73,000 which is  
+[1670.48] even higher than Fastify, but it's not something 
+concrete. For example, sometimes we go a little  
+[1675.2] lower than Fastify and sometimes a little higher, 
+but definitely always way higher than Express.  
+[1681.44] Now I've gone ahead and I tried it with every 
+single one of these routes a few times and based  
+[1687.68] on my benchmark which I'm going to pull up right 
+here. So for each route I have Cpeak and for one  
+[1695.12] instance and then here I have 12 instance of 
+node running with different connection counts  
+[1699.68] and workers and you can see that the average 
+RPS so the average request per second of the  
+[1704.48] Cpeak framework is usually way higher than Express 
+and very comparable to fastify. Sometimes it is a  
+[1710.88] little higher. So Cpeak right now gives you pretty 
+much all the features of express. So if you take a  
+[1716.24] look at the code if you are familiar with express 
+you can easily use express in the exact same way  
+[1721.44] and it also gives you the performance of fastify 
+and it's also zero dependency. You can easily read  
+[1726.88] the code. It's an educational project as well. So 
+for these reasons I'm going to stick with Cpeak  
+[1732.72] throughout the rest of the video because with this 
+our performance is very close to raw node and we  
+[1738.48] can also understand the code. So if you're curious 
+you can go through the code you can see that it's  
+[1742.88] not magic and that's how we're going to conduct 
+the rest of the tests. All right so at this point  
+[1748.48] you should now feel pretty comfortable with this 
+autocannon. Now let's move on to the other ones.  
+[1754.32] All right so here we managed to handle about 
+73,000 requests per second. But this is a very  
+[1760.72] simple route. Okay, it can't get any simpler than 
+this. Let's move on to something a little more  
+[1766.0] complex. So here I've got a patch request. Here 
+we have some path variables and also some query  
+[1773.6] parameters. All right. And then we're doing some 
+dummy operations here. We're maybe checking to  
+[1778.4] see that the ID is a number. Then we're generating 
+some dummy data about, you know, a few kilobytes  
+[1784.0] of data using this array. No need to worry about 
+any of this. And then we're getting back a JSON,  
+[1788.96] right? So, we're just doing some dummy operations 
+here, but pretty much similar to a real world API  
+[1794.4] request. Okay, you get a whole lot of data back 
+and you also do some operations. Let's go ahead  
+[1799.44] and give this a shot. So, I've got the server of 
+Cpeak running and I'm going to go ahead and send  
+[1805.12] one request to this one. Actually, I've already 
+created a tab here because I don't want to type  
+[1811.36] all of this here in this video. So I'm sending a 
+patch request with two parameters right here and  
+[1817.2] also my path variables and I'm also sending this 
+JSON to my server with some data. So foo1 is this  
+[1824.4] and all of that. So I'll go ahead and send it. 
+And you can see that we get 32 kilobytes back  
+[1829.44] and it's a pretty lengthy one. All right, we 
+get about 700 lines of JSON. So this is more  
+[1834.96] real world. All right, in the real world when you 
+send an API request, you don't just get a simple  
+[1839.28] message back. You get a lot of data. And let's now 
+try it with this and see how many requests we can  
+[1843.76] handle in a bit of a real world example. So I'll 
+go back right here and I'm going to go ahead and  
+[1849.28] actually paste a command. So here's the autocanon 
+one. I'm specifying a few more options. -b meaning  
+[1855.04] my body which is this JSON body exactly what I 
+specified in Postman and also the content type  
+[1861.2] which is application JSON. And we're going with 
+the exact same parameters as before connections  
+[1865.68] five duration 20 seconds pipelining two and one 
+thread. Okay. So, I'll go ahead and send this.  
+[1872.72] Now, if I take a look at my activity monitor, you 
+can see that it's utilizing all its CPU power. So,  
+[1878.64] this node is now on one core, 100% CPU usage. 
+So, I don't have any idle CPU for this process,  
+[1886.16] but I do have still quite a whole lot of idle CPU 
+on my machine. All right, so now we're only now  
+[1891.6] down to 8,000 requests per second. All right, this 
+is 10 times slower compared to what we had before,  
+[1898.0] but also we're moving a whole lot of data, right? 
+We're moving 5 GB of data in these 20 seconds.  
+[1905.12] Okay, now let's see if we can speed this up 
+a little bit because again, as you recall,  
+[1910.16] I still have quite a whole lot of idle CPU and at 
+1 million requests per second in that environment,  
+[1916.16] we got to utilize all the resources that we've 
+got. So, I'm going to go ahead now and run this  
+[1921.84] application in cluster mode, meaning that we're 
+going to now run many instances of this node  
+[1927.92] process. And I've got a bit of code here. I'll 
+show it to you. We're going to do that with PM2.  
+[1933.36] So, I'll just have to run this. And it's now going 
+to run 12 instances because I've got 12 cores. So,  
+[1939.04] I'll now go ahead and run that. So, PM2 start 
+ecosystem. And PM2 is just an application that  
+[1945.36] lets you, you know, run multiple instances of 
+your application. And here in my activity monitor,  
+[1950.56] you can see that I've got multiple of them. 
+And the way that it's going to work now is  
+[1954.32] that all this traffic that AutoCA cannon is 
+going to generate is going to end up in the  
+[1958.8] parent process. And then that parent process is 
+going to distribute that traffic to all the other  
+[1963.84] processes. All right. So now I can utilize 
+way more CPU than I could before. All right.  
+[1969.28] I'm going to go ahead and run this again in my 
+activity monitor. You can see that my idle CPU  
+[1973.68] is now way lower at only 30%. And some of these 
+processes are kicking in with 100% CPU usage,  
+[1979.52] but still not all of them. So, this is not really 
+maximum capacity. We can push it way further,  
+[1985.36] and that's just what I'm going to do. But you 
+can see that we can now handle 36,000 compared  
+[1990.32] to only 8,000. That's a big jump by just 
+running our application in cluster mode. So,  
+[1995.2] I'm not changing my code. I'm just now 
+utilizing more of my CPU. And with that,  
+[1999.92] I can jump way more than I could before. Now, I'm 
+going to actually change this to workers six. So,  
+[2008.56] I'm going to spawn a few more workers actually. 
+Okay, my cursor is here. So, connections,  
+[2013.52] I'm going to go with 20. And then workers, let's 
+go with six. Right. So, this way we can send way  
+[2019.36] more requests at any given point of time. And back 
+here at my active monitor, you can see that now my  
+[2024.32] idle CPU is zero. Right? So, now I'm at maximum 
+capacity. All my processes here are at full power.  
+[2031.44] All right. And this node, this is the autocanon 
+one. This is also at 200% CPU usage. And I can't  
+[2037.44] really go any further than this. And now here 
+the average is 42,000. Still not that big of a  
+[2043.76] difference, but quite again a big jump from just 
+having one simple process. All right. So let's  
+[2050.4] keep this number in our mind. 42,000 requests 
+per second for this route, which is quite CPU  
+[2056.4] intensive and also network intensive because we're 
+sending a whole lot of data through the network.
+[2064.4] All right, so what are we doing here? I mean, we 
+said we're going to handle a million requests per  
+[2069.52] second and we're still so far away. I have just 
+paused a recording and run this again. And you  
+[2075.84] can see that even without the video recording 
+messing with the CPU, we have averaged around  
+[2081.76] 50,000 requests per second. Well, we actually did 
+hit 1 million, but that's the total requests. So,  
+[2088.88] we handled 1 million requests, but who are we 
+kidding? That's in 20 seconds. Our goal is to  
+[2095.2] get to 1 million in just 1 second. Well, seems 
+like a big challenge. And what am I going to  
+[2102.24] do? I'll just launch 20 more Mac Studios. Well, I 
+might just do that but a little differently. So,  
+[2109.04] we're going to now go to Amazon and launch some 
+very powerful machines and then try this. All  
+[2116.0] right. Now, before I do that, I want to give a 
+quick disclaimer that if you are following along  
+[2121.68] with me up until this point and you don't know 
+how to work around AWS and work in the cloud,  
+[2127.6] don't even think about trying what I'm going 
+to do yourself. This setup that I'm going to  
+[2132.56] launch is going to cost $30 an hour or around 
+$20,000 a month. So, if you mess up a little bit,  
+[2139.84] you can end up with a massive bill at the end 
+of the month. So, you're better off just watch  
+[2144.4] me do this section. And if you want to do this 
+at one point in the future, make sure that you  
+[2149.28] know what you're doing. I know what I'm doing. 
+I've been using AWS for years. I know how to keep  
+[2154.0] cost down and make sure that I'm not going 
+to end up with a big bill. So in your case,  
+[2158.96] make sure that you are that comfortable too before 
+trying to do something like this. All right,  
+[2163.6] let's do it. So I'm going to go into the Amazon 
+console and log into the management console.
+[2173.84] All right, I have logged in here and I'm going to 
+go into EC2. Now here in EC2, this is the section  
+[2180.64] where we can launch computers. All right, it's 
+very simple. You can launch whatever computer  
+[2184.72] that you want with whatever config you'd like. 
+You can launch some supercomputers that you can  
+[2190.48] launch some of the most powerful AIs on or you can 
+launch some very simple close to free servers to  
+[2197.84] launch your own applications on. So you have 
+a lot of power in this EC2. This is arguably  
+[2203.12] the most powerful service here in Amazon. And with 
+this you've got a huge amount of power and they've  
+[2210.32] got more than 600 instances. All right. So this is 
+a massive section but it's also again very simple  
+[2216.72] to understand. All you need to know is that here 
+we can launch computers and that's it. All right.  
+[2222.4] I'm going to go here to the instances and click 
+on launch an instance or launch a computer. All  
+[2228.0] right. Now here I have already created an 
+image. So I'm going to go ahead and select  
+[2234.32] that one. All right. Because I don't want to 
+configure this server from scratch and waste  
+[2238.8] like 30 minutes here on the video show you how 
+to do it. So I've already done it. For example,  
+[2243.44] I've already installed node. I have installed 
+this PM2. Did things like changing my bash  
+[2249.6] script a bit. So yeah, quite straightforward. But 
+I don't want to do it all again from scratch. So  
+[2254.96] I have an image. So what I have done is that 
+I have already launched this computer. I did  
+[2259.52] all my configurations and then I took a copy of 
+the computer's disk. And then using this copy,  
+[2265.84] I am going to launch a new computer. All right. 
+Here's where the fun is where you get to choose  
+[2271.52] the instance type, right? You've got a fair bit 
+amount of options here. Hundreds of options. You  
+[2276.88] can go with for example this one. It has 48 CPU 
+cores and close to 200 GB of memory. Right? You  
+[2285.04] get some very powerful machines here. And you 
+got a lot of options. All right. A whole lot  
+[2289.84] of options. So, the one that I'm going to 
+go with is called C8i. 32XLAR. All right.  
+[2298.64] This machine has 128 CPU cores and 256 GB of 
+RAM and it costs around $6 an hour to run. So,  
+[2309.12] just to compare this one with my current machine. 
+This C8i32, has 128 CPU cores, 256 GB of RAM,  
+[2318.72] which is eight times more than what I've got, and 
+its network performance is 50 Gbits per second or  
+[2325.36] 6.25 25 gigabytes per second. So five times more 
+than what I can handle. And again, it costs $6 an  
+[2333.12] hour or about five grand a month. All right. So 
+quite expensive. It's 10 times more powerful than  
+[2338.8] mine. So it's kind of like we're going to launch 
+10 Mac Studios right now somewhere in the world  
+[2344.64] somewhere in Ohio. All right. Because here I am. 
+My region is here, Ohio. All right. I'll scroll  
+[2352.24] down. I'll select my key pair so that I can SSH 
+into this machine. Now for its network setting,  
+[2358.24] I've already created something called allow 
+all. What this is is that it's going to open  
+[2362.24] up all the possible ports. Terrible thing to 
+do in production, but here I'm just going to  
+[2367.12] use it for a few hours and then shut it down. And 
+I don't want to worry about what port is going to  
+[2371.6] work and what is not going to work. All right. 
+So I'll select this one. Now for my storage,  
+[2376.32] I'll try to maybe add some storage, maybe 500. 
+And then I'll click on advance here. I just want  
+[2382.88] to have a little bit more throughput to this. And 
+then IO ops. This is input and output per second.  
+[2390.0] I'll change it to 30,000. I really probably don't 
+need to do this, but I just want to try this. Now,  
+[2396.72] this would cost a few hundred extra dollars 
+per month, but that's okay. And that's it.  
+[2402.96] I'll go ahead and give it a name. I'll 
+call it power server. And then I'll launch
+[2412.0] Now I'm going to launch yet another server. 
+So I'll click on launch instance and then  
+[2417.92] here I'll select another one of my AMIs 
+and this is the one that I configured for  
+[2424.32] the actual tester. Now all that I've done here 
+is install autocannonand that's it. All right,  
+[2431.28] that's all that we're going to do here on this 
+machine. So, we're going to use one machine to  
+[2434.88] generate traffic and we have another machine, our 
+server, that's going to handle the traffic. All  
+[2439.76] right? Because right now on my Mac Studio, I was 
+doing both on the same machine, generating the  
+[2444.72] traffic and then handling the traffic. But now, 
+we have a completely dedicated machine that's  
+[2450.32] close to 10 times more powerful than my own 
+machine to generate the traffic. All right,  
+[2455.04] it's a beast and we're not going to have any 
+problems with having low traffic. Right. So  
+[2460.56] I'll select that C832X large and keeper just 
+like before. Network I'll go with allow all.  
+[2470.0] Then the storage for this one I'll just 
+go with this. It doesn't really matter.
+[2476.4] I'll call it power tester and then I'll launch.
+[2483.44] All right. So I'm just going to wait for a bit 
+for these two to start working. It would take a  
+[2487.92] few minutes for him to initialize. But I also need 
+to do one more thing here. We have a few routes  
+[2493.6] where we're going to do some database operations. 
+So we're going to connect to Postgress and try to  
+[2498.56] write and read. So I'm also going to go ahead 
+and launch a database instance in the cloud for  
+[2504.56] handling the database. Now I'll go back here to 
+the services and then I'll go to Aurora and RDS.  
+[2516.0] Now actually I've already launched the database. 
+It's a very powerful machine but I'll show you how  
+[2522.72] I've done it. So I just need to start this and 
+that's it. So I'll select it and then click on  
+[2527.68] start. Just to give you a bit of an idea. This is 
+DB.M5.16xlarge. Now I want to go here to create  
+[2535.12] estimate by AWS. And here I have searched for 
+it. You can see that it's got 64 CPU cores and  
+[2543.92] 256 GB of RAM. This is a beast of a database. 
+It's very powerful. And I'm going to run it in  
+[2552.32] a single availability zone, right? We don't need 
+to scatter it across. We just need it to be in one  
+[2558.56] location and that's it. Now, this one also costs 
+around $5,000 or $6 per hour. All right. Now,  
+[2566.72] for the storage, I'm going with GB3 with 
+around 3,000 IOPS, which I know is pretty low,  
+[2573.2] but we're going to try it with this. I don't 
+want to worry too much about the database. So,  
+[2576.32] we're just going to go with that and then 
+try another one and see what's going to  
+[2579.04] happen. All right, so now I've got this database 
+running, and I've also got these two. Hopefully,  
+[2584.96] they're now running. All right, there we go. So, 
+I'll go ahead now and SSH into both. So, I'll  
+[2591.12] select my power server. I'll copy my public DNS. 
+And then here I'm going to have a new window here.  
+[2598.72] And I have four tabs here. So I want to dedicate 
+one of them to the power server machine. I have a  
+[2605.36] bash function called SS which I can use to easily 
+SSH into different machines. So all I got to do is  
+[2613.28] say SS and then paste the domain name. And that's 
+it. All right, here we are. We are now in a beast  
+[2620.72] of a machine. And here's my bash prompt. All 
+right, let me now try to do this again. So,  
+[2626.24] I've got another one. I'm going to have two tabs 
+for each because we want to be able to monitor the  
+[2630.48] CPU usage. So, SS this one. And now we're locked 
+in. So, I've got one tab here, power server,  
+[2636.88] and then one more right here at the beginning. 
+And then let's do the power tester. There we  
+[2643.12] go. We've got it running. So, I'll select it. 
+I'll copy the DNS or domain name here. And then  
+[2648.64] say SS and log into this. Let me zoom in a bit. 
+This is the machine that we're going to use to  
+[2656.08] generate a huge amount of traffic and let me do 
+it again over here. There we go. All right. So,  
+[2664.48] here I have already cloned the codebase. So, I'll 
+go into that and I've also got the PM2 installed.  
+[2672.16] All right. Now, here on the power tester, I have 
+the autocannon. All right. Let's make sure that we  
+[2679.12] understand the architecture that we are on right 
+now. So we've got one machine here that we call  
+[2684.72] our power server. So this is our power server. 
+And then we've got another machine that's the  
+[2691.6] exact same type. And this one is our power tester. 
+All right. So we're using this one to generate  
+[2697.44] traffic and send that traffic over to our server. 
+Now these two machines are obviously connected  
+[2704.48] together. So through the network interface of 
+both there is a connection. So this way these  
+[2711.2] two can easily communicate together. Now we've 
+also got our database right here and this is our  
+[2719.2] Postgress SQL. All right. So we've got Postgress 
+SQL right here and this one is connected only to  
+[2726.56] our power server. All right. Now this whole 
+setup is on a private network. Of course,  
+[2733.28] they can communicate to the outside internet, but 
+we want to be on this private network because we  
+[2738.08] don't want to worry about the internet speed. All 
+right. Now, we only got to worry about our network  
+[2742.8] speed. So, yeah, this is our architecture. 
+Very straightforward. And we're going to be  
+[2748.56] using this one to conduct our tests and hit 
+a million requests per second. So, all right,  
+[2755.84] let's go ahead and generate some huge amounts of 
+traffic. Code is the same. So I'm going to show  
+[2760.08] you the code here on my machine. But here this 
+is the remote machine. First of all, let's start  
+[2766.56] the application. So I'll say PM2 start. And then 
+let me double check my ecosystem file. All right,  
+[2773.68] there we go. Looks good. So I'll say PM2 start the 
+ecosystem. All right, we're going to now start 128  
+[2781.36] instances of node, which is absolutely crazy. But 
+yeah, let's wait for it. There we go. We've got a  
+[2787.28] huge amount of them. Restarting these would take 
+a while. All right. Yeah, it would take a while  
+[2792.88] because it's it's a lot. 128 instances is just 
+crazy. But yeah, we've got it here. And then we  
+[2801.04] should now be able to ping this server or at least 
+send a request to /simple. All right. So, I want  
+[2806.0] to go ahead here, select my power server and then 
+copy the domain name. And then here in Postman,  
+[2812.24] I'll create a new tab and go into that. So port is 
+3000 and then slash simple. I'll send it over. And  
+[2820.32] there we go. We get message high. But now from 
+this power machine. All right. So we've got the  
+[2826.72] server running. The CPU usage of every single one 
+is zero. Now I'm going to autocannon this /simple.  
+[2834.24] Before I do this though, I'm going to monitor my 
+CPU usage here on this power machine. There's a  
+[2841.2] command called mpstat one. And then it's going 
+to show me the idle CPU percentage here. Right,  
+[2848.0] it's now 100%. All right, I'm not doing anything 
+with these cores. I also have added an alias here  
+[2854.48] that's called CPU- usage. So I'll be using this 
+one just to make life a little easier. All right.  
+[2862.32] Okay. So now that I've got this running, I'll go 
+ahead and autocannon this one. I'll actually do  
+[2868.24] the mpstat again here on my power tester. And 
+here I'm going to paste the command. Right?  
+[2874.4] So autocannon get method. We're going to open up 
+now a thousand connections. Still only 20 seconds  
+[2881.2] pipelining now 100 up from two that we were doing 
+before. And for workers we're going to spawn 120  
+[2888.32] threads. Okay. And then here's my address. Right. 
+Okay. So ready. Let's go. I'll go ahead and start  
+[2896.64] it and let's monitor the CPU usage. You can see 
+that we're now down to zero. So, we're utilizing  
+[2903.6] this beast completely. All the CPU is now totally 
+used. And now, if I take a look at the tester,  
+[2909.6] actually, we still have 50 more%. Right. So, I've 
+launched a very powerful machine for this tester.  
+[2915.2] I could have gone with something a little simpler, 
+maybe with only 90 CPU cores or something like  
+[2920.08] that, but yeah, the point is that we're utilizing 
+the server completely. Now that it's done, if I  
+[2926.88] take a look here, you can see that we handled 6 
+million requests per second. That's that's crazy.  
+[2933.6] But but still also keep in mind that running this 
+cost us $5,000 a month. All right. So, yeah, sure,  
+[2941.36] we did hit the 1 million requests per second 
+milestone, but it's costing us a huge amount.  
+[2947.76] And also also, it's a very simple hi message. 
+All right, it's very straightforward. It's  
+[2956.24] just a JSON message coming back. And no wonder 
+that we should be able to do this, you know,  
+[2960.96] on this beast. But what if we added more logic? 
+What if we tried with the patch request or with  
+[2967.36] some database operations? Now we're talking. All 
+right, so now it's going to get way more complex,  
+[2972.72] but we still would be able to do it. So 
+the point is that we can handle, you know,  
+[2976.96] millions per second on this machine with this 
+tester. Okay. So, if we're not going to be able to  
+[2982.64] hit that on the other routes, we should be able to 
+figure out what is going on. All right. We might  
+[2988.8] be having maybe a memory bottleneck or a network 
+bottleneck or a disk bottleneck. Whatever it is,  
+[2994.32] we have to be able to know it. All right? Because 
+we surely know that Amazon is not limiting us and  
+[3000.24] also this tester is not limiting us. All right? 
+Let's now go ahead and try it with the patch  
+[3005.68] request. All right? I'm going to copy another 
+command. Paste that over. And it's just like what  
+[3012.56] we had before. Connections though, 500, duration 
+20s, pipelining 50, and then 120 workers. I'll go  
+[3022.16] ahead and send this. Let's monitor the CPU usage. 
+Idle 80%. That's That's massive. All right. So,  
+[3030.32] yeah, this tester is pretty much sitting idle 
+at this point. Now, this is kind of interesting.  
+[3035.12] The CPU usage of the power machine is only 50%. 
+Hm. What is going on here? All right, let's see  
+[3042.56] if this is finished. And it is finished. But hey, 
+look, we only handled 100,000 requests per second.  
+[3052.08] Hmm, seems like something is not right here. And 
+surely we also did not utilize all of our CPU. So,  
+[3058.8] we got to figure out what is going on. 100,000 
+is way, way lower than, you know, this. But of  
+[3064.72] course, we're also doing way more here in this 
+route. Now, I want to tell you what's going on.  
+[3069.44] It took me a little while to figure it out, but if 
+you look here down in the bottom, in 20 seconds,  
+[3074.8] we sent 3 million requests and it says 120 GB 
+read. All right. Now, if I go ahead and divide  
+[3084.08] this number by 20. So, if we do the math, 119 
+GB divided by 20, which is 5.9 GB. So we were  
+[3094.48] moving across six gigabytes of data per second. 
+All right, this is massive. This is a massive  
+[3101.92] amount of traffic. And if I go back here to the 
+keynote here, you can see that the network speed  
+[3107.68] here is 6 GB per second. So our main bottleneck 
+here is our network. All right, the network speed  
+[3114.32] is not going to allow us to accept more traffic. 
+Now still 50 Gb per second is massive. All right,  
+[3122.24] 10 Gb on your personal computer is still 
+considered very very high. Now, this is just  
+[3128.16] on a whole other level and we're hitting a limit 
+with this. This is quite significant. But yeah,  
+[3134.64] you might be thinking, is this the absolute 
+limit? Not really. We can go higher than 50.  
+[3139.76] We can launch another machine. For example, if 
+we go right here to the cost estimator of Amazon,  
+[3147.76] the network performance of this machine is 50,000 
+per second. So, if we want to go higher than this,  
+[3154.24] we can probably select another option right here. 
+Now, 35 is lower than what we've got. But look,  
+[3161.84] 300. All right. Let's see if we can find 
+something with this. Now, it looks like this  
+[3166.48] filtering here is not working. So I can maybe 
+try to look for it like this. And here we have  
+[3171.76] a few instances with 100 and I'll go ahead and 
+show 50. Okay. So 100 is the next that we can  
+[3180.08] try. This one is now twice as fast as what we've 
+got. All right. So if I select maybe this one,  
+[3186.4] maybe one of the cheapest possible options 
+that we've got because some of them are quite  
+[3190.16] expensive. So this $12 an hour, we get about 
+800 GB of RAM, which is crazy. But with this,  
+[3198.56] we can easily handle twice as much traffic. 
+And here we were close to 200,000 requests  
+[3204.88] per second. So we're still not going to be able to 
+hit 1 million per second with this instance. But  
+[3210.48] we can go even higher than 100 Gbits per second. 
+Now, there's a power machine right here. If I can  
+[3217.2] find that. It's close to a superco computer. 
+So, look. Give me a second to try to find it.
+[3228.0] All right, here we go. 3,000 per second. With 
+this, we can surely hit that milestone. This  
+[3235.28] is way more powerful than what we need. But 
+do you really want to pay $30,000 a month for  
+[3242.56] having such a powerful machine? This is close to 
+a supercomputer, but yeah, it's very expensive.  
+[3248.0] All right, so the point that I'm trying to make 
+is if you want to go that far and make sure you  
+[3252.32] can handle a million requests per second with this 
+API, the cost is going to be astronomical. Okay,  
+[3259.04] now just to give you an example of how significant 
+handling 1 million requests per second really is,  
+[3266.32] I'll go right here to a page. So, this open 
+weather API, you've probably used it for some  
+[3272.72] maybe educational projects and this one they 
+charge you for their API and they charge you  
+[3278.72] well the first 1,000 call is free but then they're 
+going to charge you a very very small amount per  
+[3284.88] request. All right. Now, if you go right ahead and 
+you do the math, we've got about 2 million seconds  
+[3292.08] in a month. And if you do 1 million requests per 
+second, yeah, you're going to have to add up some  
+[3298.8] numbers, but you're going to come up with $3.8 
+billion per month. All right. Now, yeah, sure,  
+[3304.56] nobody's going to hit this route a million times 
+a second. Nobody's going to check the weather this  
+[3308.64] many times. But the point that I'm trying to make 
+is that it's it's crazy. We're talking some crazy  
+[3313.28] scales here. Now, there's another one. Maybe this 
+is actually way more real world. And with this,  
+[3319.12] surely you might be able to hit 1 million. And 
+price per million here is way more manageable at  
+[3325.6] only 90, right? So you just have to pay 90 cents 
+to handle a million requests per second. Now if  
+[3333.76] you again do the math, you multiply this number by 
+2 million seconds in a month. The cost is going to  
+[3340.08] be $3.9 million. Even with a service that's more 
+reasonable to hit a million times. All right. So,  
+[3346.72] I've done a few more and you know with different 
+API services like Google Maps or Cloudflare  
+[3352.32] workers. Now, with this one, I I'd say it's pretty 
+realistic for a company to end up hitting the  
+[3357.12] workers here a million times per second because 
+this is a serverless technology. And sure,  
+[3362.32] for some companies, they might end up doing that. 
+But I would argue that it's not it's not cost  
+[3367.52] effective at all. Launching your own computer 
+at this point is way more cost justified than  
+[3372.4] trying to do this. And this one still costs, you 
+know, close to a million dollars per month if you  
+[3378.0] want to hit it a million times per second. So 
+we're talking here millions of dollars per year  
+[3384.24] if we are going to handle a million requests per 
+second. All right, so we're on some crazy scale  
+[3390.64] and we can already hit it with a very simple one. 
+But with this next route, yeah, we've got a bit of  
+[3397.6] a problem here. We need to increase our network. 
+And we can surely increase it. All we got to do  
+[3403.36] is speed it up by five times. So, if we can go and 
+find a machine. I mean, this is actually a little  
+[3409.6] too crazy. Five times the 50 gig that we've got. 
+We just need to have 250. This is way more than  
+[3417.2] what we need. All right. So, this one is way 
+more realistic. So, 200 per second, but well,  
+[3424.32] now this is actually an actual supercomput. So, 
+this one is going to cost us a fortune to run. So,  
+[3429.6] yeah, definitely not this one. But I'm pretty sure 
+you can find some machines here that would cost  
+[3434.16] less. All right. Now, also to be fair, in the real 
+world, companies that do handle a million requests  
+[3441.44] per second, which we have quite a few of them. 
+Got some services like Uber and Amazon itself,  
+[3448.0] they do handle at such high scales. They don't 
+have a ginormous supercomputer that handles all  
+[3453.68] the requests. What is most probably the case 
+is that they have many servers scattered across  
+[3459.68] the globe and they're doing load balancing and 
+something to connect people to the closest server.  
+[3465.28] For example, they might set up one powerful server 
+here and connect everybody from New York, Chicago,  
+[3470.8] Toronto to this one. Then have one more here 
+for California and Vancouver and have maybe  
+[3476.8] one here for South America. Maybe a few for 
+Europe, Africa, India, and all over the place.  
+[3483.84] All right. So now you've got maybe a 100 
+servers handling many requests coming in  
+[3489.2] and each one can handle maybe 500,000 requests 
+per second. All right. So this is usually what  
+[3495.2] happens. All right, not just one massive 
+server that handles everything. And with  
+[3500.0] this you can scale up even more. For example, 
+if you've got a lot of traffic from America,  
+[3505.2] you can add in a few more servers right here. 
+Okay. Right. So yeah, that's usually the case,  
+[3510.8] but we just want to see the significance of 
+handling such a massive high load. All right,  
+[3516.08] this network speed again is crazy, but still we 
+hit a limit. All right, now actually what we could  
+[3523.2] do, I'm going to go ahead and change something 
+in my code. So I'll go to the Cpeak code. The  
+[3530.8] reason that we have hit a limit is because we're 
+trying to again generate a huge amount of data.
+[3539.2] So, what I could do is change this array from 
+100 to just maybe three. Let's see what's going  
+[3547.84] to happen. So, now we're generating a 
+very low amount of traffic. I'll save  
+[3553.76] this and close. And then let's restart all our 
+processes, which would take a while, but yeah,  
+[3562.24] let me make sure that it's going to work 
+fine. So here I got to go and do that patch.  
+[3568.16] I'm going to copy this path and then paste 
+it right here. And then for the JSON body,  
+[3574.48] I'm going to specify that thing as well. So just 
+need to select raw and then JSON and then copy  
+[3582.96] this one. And I also change it to patch. So it's 
+not now a big JSON body. It's a little bit but  
+[3591.68] good enough. All right. Still 1 kilobyte. This 
+still could be a real world use case. So let's  
+[3596.56] go ahead and try it again and see what's going to 
+happen. So I'll go ahead and run this. Now the CPU  
+[3601.6] is now 0%. So now we are not being bounded by our 
+network card. All right, the network speed is now  
+[3608.0] good enough and also the tester right here is 
+sitting at half idle. So we can generate more  
+[3613.68] traffic. But obviously our machine, the server is 
+not going to be able to handle it. All right. And  
+[3618.56] now looking back right here, you can see that we 
+handled now 3 million requests per second. Okay,  
+[3625.6] so yeah, we did hit the 1 million milestone 
+here with this route. But the problem is that  
+[3631.44] if we really want to go with, you know, that much 
+data with 30 kilobytes, now we're going to have  
+[3637.44] to go with some crazy network speed, and it's 
+not going to allow us to go that far. I mean,  
+[3642.4] sure, I can do that, but my bill for this 
+month is getting a little too much. So,  
+[3645.84] I'm not going to try one of these machines for 
+now. But we could, you know, we could and we can  
+[3650.0] 100% get that 1 million per second even with 100. 
+Hey, this is future me and I wanted to say that  
+[3658.72] we will actually hit the million requests per 
+second even with the length of 100 and moving  
+[3664.16] 30 kilobytes of data per request, but we'll 
+do that at the end of the video. It ended up  
+[3668.96] being quite the challenge though. I had to 
+launch some even more powerful machines and  
+[3673.36] even then NodeJS couldn't handle it. I then did it 
+with Python, Java, and Spring, even Go actually,  
+[3680.64] and still they couldn't handle 1 million requests 
+per second, even on way more powerful machines.  
+[3686.24] But I ended up rewriting the code in C++ and 
+use one of the fastest web frameworks in the  
+[3691.92] world right now called Drogon along also with 
+one of the fastest JSON parsers in the world  
+[3697.92] that we've got right now called Rapid JSON. And 
+then, and only then, I was able to finally hit  
+[3704.16] that 1 million per second with this route. It's 
+going to be quite fascinating. So, make sure to  
+[3709.84] stick around at the end of the video if you want 
+to see that. And now, back to the main video.
+[3717.6] All right. So, let's move on to another route that 
+we've got. So, I'll go ahead and close this one  
+[3723.52] and expand the next one. Now, here it's a little 
+more interesting because we've got a database  
+[3729.76] write. All right. So, we're just generating a 
+code. Very straightforward. Just 500 characters.  
+[3737.04] That's it. And then we are inserting it into 
+our database. Let me show you this table. So,  
+[3742.56] here in the database in the tables, I've got one 
+table. Very straightforward. We've got an ID,  
+[3749.76] a created at, and then a random code. 
+So, let me go ahead and try this.  
+[3755.84] So here in Postman, I'll go ahead and duplicate 
+this maybe and then select post to slashcode.
+[3768.24] And now here we can see that this was inserted 
+into my database. And now I see this data  
+[3773.52] back. All right. So let's go ahead now and try 
+this. Let's see how many writes per second this  
+[3779.44] power database machine. It's it costs also quite 
+significantly. Here we've got another $5,000 per  
+[3785.6] month and it has a whole lot of CPU cores, a whole 
+lot of memory. So let's see how many requests we  
+[3791.52] can do with this. In other words, how many writes 
+per second can this database handle? Now before I  
+[3796.72] do that though, let's make sure that the database 
+is completely cleaned. Because if I go and use an  
+[3802.4] application called data grip and take a look at 
+what I've got here. Yeah, I've got two codes.  
+[3808.88] But what I could do is to say npm run seed. 
+And this is going to clean up the database,  
+[3816.0] recreate the table, and that's it. All right. 
+So if I run it again now, I've got nothing in  
+[3821.12] my database. I'm going to use this command a few 
+times for subsequent runs. I can also specify an  
+[3827.84] argument to insert into this table. We'll use 
+that later on for read benchmarks. All right,  
+[3834.16] so we have nothing in the database. And now 
+I'm going to go ahead and paste a command.  
+[3839.36] So autocannonpost. This just means go to the 
+next line. So we have everything here. And  
+[3844.64] then connections 5,000 20 seconds. Pretty much 
+everything just like before. Now I want you to  
+[3850.4] maybe guess how many requests per second do 
+you think we can handle with this. All right.  
+[3855.76] If you have done some SQL, you might have some 
+rough ideas. It's a power database, but how many  
+[3862.32] writes per second can we do on that? All right. 
+All right, I'm going to go ahead and run this.
+[3870.16] Let's take a look at the CPU usage. All right, 
+pretty much idle here. Also pretty much idle  
+[3876.88] here. All right, so yeah, our power machine 
+is just doing nothing. All the work is now  
+[3881.68] being done by the database. All right, 
+so let's wait for it to finish. Now,  
+[3886.24] for those of you who are wondering why 
+I'm not using the top command or htop,  
+[3890.24] it's going to be one heck of a mess here on this 
+machine because we've got a ton amount of cores,  
+[3894.96] right? So that's why I'm going with this command 
+and not with actually top because it's very hard  
+[3900.0] to make sense out of it. It's just a whole lot of 
+text. This one way easier to take a look at. All  
+[3906.0] right, it's well actually we've got a whole lot 
+of errors here. So let me try to troubleshoot.
+[3914.72] All right, looks like that the issue was 
+that trying to open up such a huge amount of  
+[3919.84] connections, 5,000 overwhelmed the database, 
+and I was getting a whole lot of timeout  
+[3925.6] errors. All right, so I tried it again with a much 
+lower connection count. This time only 300. And  
+[3931.92] now we handled even more requests per second, 
+35,000, and we have no errors. So you can see  
+[3938.32] down at the bottom that 700,000 requests were 
+processed with no errors. And if I go and take  
+[3945.68] a look at my database. So I'll select all from 
+codes. And you can see that actually I'm going  
+[3954.72] to select count all. And you can see here that's 
+the exact same number that we've got. All right.  
+[3959.2] So close to a million records right now in the 
+database. So this worked. But look at the number  
+[3965.44] of average requests per second. It's pathetic 
+for a machine that costs so much. All right,  
+[3971.52] only 35,000. And our goal is to get to a million. 
+So what the heck are we supposed to do with this  
+[3977.92] route and all we're doing is a very simple, right? 
+We're just saying insert into and that's it. We're  
+[3984.24] not doing any calculations whatsoever. We're not 
+being bounded by the node code. You can try it  
+[3989.2] with C, whatever other language you want, and 
+you're going to get the exact same result. All  
+[3994.16] right? Because we're being limited by what our 
+database allows us to do. The CPU usage was very,  
+[4001.12] very low. If I try it again, we're going to see 
+that our CPU is pretty much sitting idle. And  
+[4006.96] we're also not being limited by the network 
+because we only moved across 500 megabytes.  
+[4013.28] Now one thing that we can do is to keep scaling up 
+the database and actually I went with a very low  
+[4020.88] IO ops. So number of inputs and outputs per second 
+on this instance right now is very low. Yeah,  
+[4029.44] we're we're opening up also 500 sessions. And 
+if you want to know how many sessions we're  
+[4035.2] connecting to this database, we've got 128 
+machines each machine. So if you go and take  
+[4043.2] a look at the database and then slash index.js, 
+here's where we're connecting to the Postgress,  
+[4050.16] I'm not specifying a max count here, but this one 
+is by default 10. All right, so we're opening up  
+[4056.88] 10 connections by each machine to that database. 
+And in total, we have we have a 1000 connections  
+[4062.64] opened up to this machine, which is a whole lot. 
+If we were to go with a much smaller database  
+[4068.16] here, this would have crashed. we wouldn't even be 
+able to connect to the database because being able  
+[4073.12] to have a thousand connections to a database is 
+quite large. Now, we can actually handle more than  
+[4079.2] a thousand. There's an SQL command called show max 
+connections and you can see it's 5,000. All right,  
+[4087.28] so we're not hitting this limit. We can 
+handle five times more. All right. So,  
+[4091.2] we can still go and launch five of these beasts 
+and with 600 CPU cores and we can still connect to  
+[4098.8] this database. All right. This is a very powerful 
+database that we've got. All right. But still,  
+[4103.68] in terms of rights per second, it's just pathetic. 
+All right. We don't want to go with this. We don't  
+[4108.4] want to go with like 32,000 per second. So, what 
+is the solution? What can we do to solve it? Now,  
+[4115.52] if I show you here in my configuration again, 
+provisioned IO ops inputs and outputs allowed per  
+[4121.76] second is only 3,000. But we're trying to write a 
+million times, so this should be way, way higher  
+[4127.36] than what we've got. The problem though is that 
+it's also going to be way more expensive. Now,  
+[4133.36] I'm not going to show you doing that, but here on 
+the screen, I've done it. When I paused the video,  
+[4138.08] you can see that I modified my database to change 
+my current storage to 500 GB. and then changed  
+[4145.52] the storage throughput as well. And now the input 
+and output per second is 12,000. So I increased my  
+[4151.6] speed by about four times. All right. And here 
+now we can take a look at the result. I ran it  
+[4157.36] again and we actually got a little higher. We were 
+doing 30,000 before, but with this new diskwe can  
+[4163.92] now handle 66,000 per second. Still a far far away 
+from hitting a million. And also the bad news is  
+[4172.24] that doing that changing the disk added $1,000 
+per month to the database cost as you can see  
+[4179.28] right now on the screen. All right. So if we want 
+to keep increasing this number, our cost is going  
+[4184.96] to skyrocket. We're talking at least $15,000 
+a month just for the database. And even that,  
+[4192.16] I think, is not enough. I didn't try to hit my 
+database one million times per second because  
+[4196.88] that's crazy and you should probably never even do 
+it. We're going to talk about a solution in just a  
+[4201.76] bit. What you got to do instead is to save this 
+data and then through batch processing save to  
+[4208.88] your database over time. All right, that's a much 
+much more cost-effective way than this. All right,  
+[4215.28] we'll get to that in a bit, but let's just keep it 
+at this. Let's say that we failed to hit 1 million  
+[4220.48] per second with this database route because it's 
+very expensive and I don't want to burn that much  
+[4226.64] money for it. But yeah, database scaling is a 
+massive thing. We can surely keep on adding more  
+[4232.96] databases, adding more powerful databases, but our 
+cost is going to skyrocket. So, we're going to go  
+[4238.16] with another solution that I'm going to discuss 
+in a bit. But let's try maybe read. All right. So,  
+[4244.24] I'm going to scroll down. Let's move on to the 
+next route. code version one and we're doing a  
+[4249.92] very simple read. All right, select ID code from 
+this order by random. So, we're going to randomly  
+[4257.28] pick something from our database and that's it. 
+Here are my postman. I'll just have to change  
+[4262.48] this to get add my v1. Send it across and there 
+we go. We've got a record and I can send it again.  
+[4269.44] We've got another one. Right now in my database 
+again, we've got about half a million records.  
+[4276.96] Okay, 700,000 to be precise. Now, let's 
+add in maybe 5 million because why not? So,  
+[4284.16] here I'm going to run a command like this. 
+Dash R, meaning how many records we want to  
+[4288.88] add to the database. And I want to go with maybe 
+5 million. All right. So, I've got three zeros.  
+[4294.8] Three zeros. It's actually right now 20 million. 
+Yeah, let's go with maybe 10 million. Okay.
+[4303.12] I'll copy this one. and then put that right 
+here. Now, the reason that I'm going to go  
+[4307.68] with 10 million is that if you are handling a 
+million requests per second, you at least have  
+[4313.12] 10 million records in your database, right? 
+At least. You probably have way more. So,  
+[4317.52] let's try to make it a little more logical. All 
+right, we don't want to go with 700,000. That's  
+[4322.64] way too low. So, I'm going to go ahead 
+and run this. Now, it's going to insert  
+[4326.64] all of them to the database. It would take a 
+while, so I'm going to have to fast forward.
+[4340.16] All right, the seeding is now complete. And let's 
+see what we've got. Count all. We've got exactly  
+[4346.32] 10 million. And let's now go right ahead and 
+do a read. And this is a huge amount of data  
+[4352.96] that we've added in. And it took about 30 minutes 
+to insert all these records. All right. So, yeah,  
+[4358.24] it's a long list. And now we're going 
+to go ahead and try the other route,  
+[4363.76] which is a very simple read. All right. So, 
+I'll go back here to my tester and then I'm  
+[4371.44] going to go with the same connection, but I'll 
+add in dash v1 here. I'll clear my terminal.
+[4382.0] And then I have to change my method from post to 
+get. All right. All right. Let's do it. Let's see  
+[4388.16] how many reads we can now do per second. The CPU 
+usage pretty low, right? Almost nothing. Almost  
+[4396.24] nothing is going on here in this power machine, 
+but the database might be now struggling quite a  
+[4401.36] bit or at least hitting a limit. Okay, so yeah, 
+my server is just pretty much doing nothing,  
+[4408.48] but we're sending a whole lot of requests to grab 
+all these codes. All right. Oops. It's taking a  
+[4415.2] while here. Hey, that's that's interesting. Let's 
+see if we're going to get a response back. Oh,  
+[4422.08] hold on a second. Yeah, something is not 
+right. So, I gotta do some troubleshooting.
+[4437.6] All right, so looks like that we just crashed. 
+Well, the database actually crashed and I can send  
+[4444.48] a request to probably grab a data from version 
+one, but looks like we can't even do it. Now,  
+[4451.92] I'm going to try to explain why this is taking 
+so long just for a simple request. Now, if you  
+[4457.04] know SQL, I just want you to think about what 
+is going on here in this code. It doesn't have  
+[4461.2] anything to do with node. So, just SQL doesn't 
+even have anything to do with Postgress. So,  
+[4466.0] the simple SQL command, there's something 
+wrong with it. And the thing that's wrong  
+[4469.76] with it is this random. All right, this 
+is actually this is big O of N. All right,  
+[4476.16] actually AI is helping me here. So what we're 
+trying to do is to scan the whole database with  
+[4481.44] this random and then pick one. All right, this is 
+insanity. And when you have 10 million records,  
+[4488.4] this is just not going to work. It would take an 
+eternity to work. Now here it worked. And look  
+[4493.92] at this. 43 seconds just to get a response back 
+for something that's way way too simple. Okay,  
+[4500.64] so yeah, 10 million records is way too much. 
+If you have this many records in your database,  
+[4505.44] you don't want to do stupid stuff like this. All 
+right, what about version two? Now, here we're  
+[4510.88] saying select count all and then after we grab all 
+the count, we're going to generate an ID and then  
+[4518.32] send a response back. Okay, I'm actually going 
+to again try it with Postman. So, version two,  
+[4524.32] maybe this is a little faster. Well, it is 
+faster, but okay. So, yeah, 40 seconds is crazy,  
+[4532.0] but still, let's let's give it a shot as well with 
+this one with version two. I'll go ahead and try  
+[4537.52] it again with version two. All right, I'll have to 
+fast forward, but let's see if it's going to work.
+[4550.8] Yep. Even this one didn't work. Yeah, 10 
+million records might have been too much.  
+[4555.92] We should have gone with maybe 500,000 or 
+something. All right. So, yeah, we can't  
+[4560.08] really do anything when we try to do so much 
+because this count all is actually also O of N,  
+[4568.64] right? The database has to scan to see how many 
+records we've got. It's not keeping track of how  
+[4574.32] many records we've got. So even this one is so 
+horrible and you shouldn't be doing this when  
+[4578.88] you have millions of records. So this one was 
+very bad, but this is also very close to being  
+[4584.88] super bad. But let's try maybe this one. This one 
+we're getting our max ID. So we're ordering by ID  
+[4592.08] and then we're generating a number. So generating 
+an ID that's between one and max ID. All right,  
+[4598.56] that makes sense. Now this is not actually 
+big of N, right? So, let's see if this is  
+[4605.04] going to work. And the database is right 
+now going crazy. So, we may need to wait  
+[4611.2] a little bit for it. Let me restart. We 
+might have some pending stuff going on.
+[4622.32] Yeah, that takes a while. All right, so this 
+works better. It's only 40 milliseconds, so I'm  
+[4629.44] hoping that at least with this route, we should 
+be able to do that. Now, in my own testings,  
+[4634.4] I did actually get results back. I didn't have 
+10 million records. I guess I just only had a  
+[4638.64] million and it did work with that. But let's 
+see if this is going to work now. Hopefully,  
+[4643.36] version three is not going to crash, 
+but I'm not sure. So, let's run it.
+[4653.04] Oh, awesome. Look. So, it did work, but look at 
+this. Still, we're so far away from getting it  
+[4660.88] to a million per second. We're doing 200,000 per 
+second, which is still very good, but still again  
+[4668.48] so far away from hitting that. So, if we can 
+increase our performance by maybe five times,  
+[4674.16] we should be able to technically hit a million 
+per second on this very simple route. We tried  
+[4680.32] it with code version three, but the other routes, 
+they were just so so slow that we probably would  
+[4687.6] have gotten maybe 100 requests per second in 
+best case scenario. All right. Yeah. Because  
+[4695.28] this random is absolutely insane. This is why you 
+got to know algorithms if you want to move into  
+[4701.12] such high stake environment. You make one simple 
+mistake, it could cost you a whole lot down the  
+[4706.32] line. So this is way better than what we had. 
+I've also added another version, version four.  
+[4712.0] This is only a simple read, so even simpler than 
+what we had here because we're reaching out to  
+[4716.8] our database two times. One to grab the ID and 
+then one to do this. But this is this is kind  
+[4722.24] of like cheating though. We're randomly generating 
+an ID and we're hoping for the best. Okay, so here  
+[4727.84] I got to change this to 10 million. So here I've 
+got 300,000. So let me change that to 10 million.
+[4738.64] And let's try it with this route as well. Still 
+our only bottleneck here is the database. The  
+[4744.64] CPUs are all sitting idle. And looking back right 
+here, yeah, we we managed to go a little higher  
+[4752.4] at 400,000 per second with no errors whatsoever. 
+So yeah, we can do a whole lot more reads here,  
+[4759.68] but if we do the reads properly, an ID 
+lookup is just an index lookup. And this  
+[4766.64] one is instant time. All right, that's why 
+we can do a whole lot of them. Now, actually,  
+[4772.0] you know what? I'm going to go ahead and 
+change my database to have a much higher  
+[4775.52] input and output rate and then try this one more 
+time and see what's going to happen. All right,  
+[4781.84] I've just gone ahead and modified my database to 
+have a much higher input and output per second.  
+[4787.2] And here in the costs, I have put down what I 
+specified. So, I'm going with 1 TB. And well,  
+[4793.04] you can take a look at them if you'd like, but 
+the important part here is that I'm now adding  
+[4797.2] $1,500 per month to my costs. All right, so now 
+this database in total is costing $7 grand a  
+[4804.96] month to run. Let's just see how much we were 
+bounded by disk. I'm not sure at this point,  
+[4810.24] but we're going to try. Now, taking a look here 
+at the database, you can see that Amazon gave me  
+[4815.68] a warning that it's very severe. All right, and 
+let's take a look at this and see what we've got.  
+[4822.0] It says we've got tons of spikes and the CPU load 
+was at 100%. If you can take a look right here.  
+[4828.64] So yeah, this was this was a whole lot of work. 
+And scrolling down, we also have this thing that  
+[4834.8] says database connections exceeded 1,200, which 
+is expected. We know that we've got 128 instances  
+[4842.0] each with 10 connections. So this makes sense and 
+we can handle up to 5,000. But our CPU utilization  
+[4849.28] was 100%. All right. So, this is probably our main 
+bottleneck. And this is why we may not see much of  
+[4856.8] a difference with even a higher disk speed, but 
+but we'll see. All right. Dealing with a database  
+[4862.96] at this scale is absolutely crazy, but we're 
+going to see what we can accomplish. So, this  
+[4868.64] modification would probably take up to an hour to 
+complete. So, I'll have to wait for it to finish.
+[4881.92] All right, the modification is now done. We now 
+have a much faster diskspeed and I actually ran  
+[4887.92] the tests again. So, here's the right. And you 
+can see it's a little higher than that 30,000  
+[4894.32] per second, but still, you know, only 50,000 per 
+second. Now, the read is also just like before.  
+[4902.16] It didn't really change. It's still at 400,000 per 
+second. So, what are we gonna do? I mean, we got  
+[4909.28] to hit that 1 million and seems like that it's 
+proving to be quite the challenge. Now, we saw  
+[4914.88] that our CPU of the database was capped at 100%. 
+So, what we could do is to scale up, maybe add  
+[4921.52] another one of these databases and go with that. 
+In that case, if I go back to my cost estimator  
+[4927.36] for the database, so this one instance is now 
+costing close to seven grand a month. If we add in  
+[4934.16] another one, technically in best case scenario, we 
+should be able to hit 1 million reads per second,  
+[4941.2] but that's going to cost us 14 grand a month. And 
+that's the best case scenario. We probably need  
+[4946.32] to go even higher than that. And what about the 
+right? I mean, right is only 50,000. We are so so  
+[4953.36] far away from getting into a million. So what we 
+could do, maybe make our CPU twice as much. So,  
+[4960.16] I'll go with maybe 24x large. We've got 1.5 
+more CPU here. So, still not exactly twice,  
+[4968.4] but our our cost is skyrocketing at this point. 
+And then here, I'll add in more storage. I'll  
+[4976.16] actually change this one provisioned input and 
+output operations and try to go with the maximum,  
+[4983.44] which is a quarter million. All right. So, even 
+with this, which is going to now cost $33,000 per  
+[4991.28] month, well, with this one, we should technically 
+be able to hit a million at least with the read  
+[4997.84] with the write. I'm not so sure about that. We 
+might need to even go higher than this. Now,  
+[5002.56] we can also go with the Aurora option of Amazon. 
+So, if I go right here, this is something that  
+[5009.52] Amazon would handle. So, Aurora Postgress. Right 
+now, I am on a single Postgress. So, this one,  
+[5015.84] Amazon will do some autoscaling for us, but I 
+did a bit of math and this one would also cost at  
+[5022.32] least 20 grand a month to handle a million reads 
+and writes per second. Yeah, 20 to 30 grand. So,  
+[5029.28] we're talking some crazy scale right here. 
+All right, this is the scale of Uber and yeah,  
+[5036.0] we're trying to simulate that here. So, it's going 
+to cost us a fortune. Now, I'm done modifying my  
+[5041.52] database. It's going to cost me quite a lot. So 
+yeah, I don't want to do this anymore. I just  
+[5045.52] want to terminate this and move on to our next 
+route and just say that we we failed at hitting  
+[5052.4] 1 million per second with our database. But we 
+still have hope. And I'm going to talk about the  
+[5059.68] solution that won't cost us a massive amount of 
+money. And this is where Redis comes into play.  
+[5068.48] Now what you should know is that the read and 
+write speed of your memory is about 10 times  
+[5073.84] faster than your disk. And Postgress whenever 
+you do a write or read you're reaching out to  
+[5079.28] your hard drive. The data is sitting on 
+your hard drive and your hard drive could  
+[5083.76] be the fastest possible SSD and it's still not 
+going to cut it. And the access time of RAM is  
+[5090.4] usually thousands of times faster than disk. All 
+right. So with this basic knowledge that we have,  
+[5097.6] we can solve this problem of hitting a million and 
+still have a database. Now what usually happens in  
+[5104.0] these companies that handle such a massive amount 
+of traffic is that well they use Redis which is  
+[5110.08] an in-memory database storage and it's a very 
+easy one to deal with. All right. So going to  
+[5116.0] the code now. So, we're going to now move on from 
+the Postgress routes. And I've got another one  
+[5122.4] here called code-fast. And this one is going to do 
+the exact same operation that we did in post code,  
+[5129.52] but it's going to write it to Redis instead of 
+writing it to Postgress. Now, you might be saying,  
+[5134.8] if we are saving them to memory, then we're 
+losing out on all the cool operations that  
+[5139.6] we can do in SQL, all the joins, you know, 
+looking at all of our data in very clean ways.  
+[5145.76] You can't really do that with Redis. But what 
+we're doing here is that we're saving the  
+[5151.28] ids to something called a que. All right, this 
+sync queue that I've got right here. So we're  
+[5157.68] saving them all to this queue. And then I've got 
+another script called sync. What this would do  
+[5165.04] is that it would read from that queue in 
+our memory. So this is sitting inside of  
+[5170.24] our memory and then gradually write them to the 
+database. So we can do this operation overnight.  
+[5176.56] Maybe it would take a couple hours and we don't 
+care. Now this is a real world thing. This is  
+[5182.08] what Uber and some of these companies with such 
+insane amount of traffic do. For example, if you  
+[5187.52] were getting lots of locations from your drivers 
+and you want to keep track of all the locations,  
+[5192.24] you're probably hitting that route millions of 
+times per second. It'd be crazy to try to save  
+[5198.0] all of them to an SQL database. What you want to 
+do is to do just like what we have here. save them  
+[5203.6] to your memory probably by using Redis or another 
+memory storage and then sync overnight. All right,  
+[5210.24] or not just overnight in a background process. 
+And also you might be wondering what about all  
+[5216.24] the data that we've got in our database. All 
+right, let's go ahead and take a look at them.  
+[5220.4] Now here so far we've got I think yeah the count 
+all you can see it's loading for quite a bit.  
+[5228.32] So let's wait for it to finish. And there we go. 
+We've got 11 million records in our database. Now,  
+[5234.4] using this command right here, we can see how 
+big our whole database is, right? This whole  
+[5240.96] codes table. So, you can see that it's 16 GB of 
+data. Now, what if we move the whole thing into  
+[5248.56] our memory? Can't we do that? What do you think? 
+Well, on this power machine, okay, I'm going to  
+[5256.08] run a command. I've got another alias which is 
+called memory usage and this is just free-hum.
+[5265.44] Now this is going to tell me how much memory I've 
+got and how much I am using. You can see that I've  
+[5270.64] got a quarter of terabyte of memory. All right, 
+200 GB of memory. So what I could do is that I  
+[5276.72] can move my complete database from my disk over 
+to my memory and only read from that or write to  
+[5284.4] that and that should be way way faster and cheaper 
+compared to the other solution of trying to scale  
+[5292.32] up our database. So I have added in another piece 
+of code called migrate. And what this does is that  
+[5300.24] it's going to move all the data from Postgress 
+over to Redis. All right, using batching. So you  
+[5306.96] can read this code if you'd like, but again all 
+that happens is that we're doing a flush for our  
+[5311.92] database and then doing select ID code created 
+at and then in batches of 2,000 we're going to  
+[5319.84] move everything into our memory. All right, it's 
+pretty cool. So, let's go ahead and try this one  
+[5327.12] and then do a few benchmarks. All right, let me 
+make sure that I've got my Redis going. So, I'll  
+[5333.92] take a look at my aliases again here because I've 
+added a few for Redis. All right, so I'm going to  
+[5339.44] have to run start Redis. If I do get Redis, tells 
+me that I've got something running. And yeah,  
+[5349.28] I think we are now connected to Redis. So let's 
+go ahead and give that a shot. So this route that  
+[5356.48] we've got code fast, let's see if it's going to 
+work. So in Postman, I'll send a post request to  
+[5362.8] code then dash fast. All right, there we go. Cool. 
+So you can see that this data was created and this  
+[5369.2] is now sitting inside of our memory. Okay. And 
+I can take a look at this data. I can go into  
+[5376.56] my Redis CLI and I'll take a look at all my keys 
+and there you go. All right. So this is all in  
+[5383.6] our memory and Redis is key value pair. All right. 
+So each one of these these are the keys and we can  
+[5389.68] take a look at the value of each one. Let me use 
+this command h get all try to get code two. And  
+[5396.64] there you go. All right. So this is the code that 
+I have right now sitting inside of my memory. And  
+[5402.16] I've got one more for code one because I clicked 
+on it two times. If I keep clicking on it, you can  
+[5407.84] see again if I take a look at all the data, I've 
+got now code five, code four, and code three. All  
+[5414.4] right, looks pretty interesting, right? That we're 
+now having all our database in our memory. So,  
+[5420.16] let's go ahead and give this one a shot and see 
+how many we can handle with this. Remember with  
+[5425.84] writing to Postgress, we could only handle 
+40 to 50,000 requests per second. So now I'm  
+[5432.32] going to try it with Redis, right? So the exact 
+same command as before, but I just changed this  
+[5438.56] one to code-fast. Let's go ahead and send it. Now 
+we're saving a whole lot of data into our memory,  
+[5444.4] but that's okay. That's what we want, right? 
+Let's first take a look at our CPU usage. All  
+[5452.08] right. So, it's sitting at 80%. Still a whole 
+lot idle. A huge amount that we've got that  
+[5457.12] we're not making use of, but better than what 
+we had before, which was sitting at almost  
+[5462.0] idle. All right. If you take a look here, we're 
+now at 100,000. And this is at least three times  
+[5470.0] more than the Postgress write. All right. So if 
+the costs were 30 grand a month with this one,  
+[5481.36] we can cut it down to 10 grand. All right, if we 
+keep saving like this and then we migrate the data  
+[5489.28] over, but still not million, right? We're still 
+so far away. And the reason that we're still not  
+[5495.04] at a million even though we're just in our memory 
+and we have a huge amount of idle CPU is because  
+[5500.88] a single Redis instance is limited to only about 
+100k requests per second, right? So 100k reads  
+[5508.72] and writes and what we got to do is to scale up. 
+We need to run more instances of Redis to be able  
+[5515.2] to handle more than 100k. All right. So a single 
+Redis instance is not going to cut it here for us.  
+[5521.84] But let me show you the read now and then we're 
+going to talk about that clustering. So here  
+[5527.28] I've got another route get codefast and this one 
+is going to well read a code from Redis. Again  
+[5535.6] keep in mind that we've got the exact same logic. 
+So we're checking even for the uniqueness of ID  
+[5540.88] before we write to Redis. Right. So I'm going to 
+go ahead now and actually first let's migrate. So  
+[5546.88] I'll say npm run migrate. So now with this, we're 
+going to move all of our data from our database  
+[5556.16] over to Redis. Okay. So everything is now flushed 
+and now it's going to move. So now we've got half  
+[5562.48] a million and it's going to have to get to 10 
+million. So I'm going to wait for it to finish.
+[5581.36] right, this is now over. So, let me take a look 
+at my memory usage. And you can see here that I'm  
+[5586.64] now using 20 GB of my memory. I still have a huge 
+amount of free RAM, but 20 gig makes sense. Again,  
+[5593.28] taking a look right here, we've got 16 GB. We're 
+saving a little more here to our Redis. So if  
+[5599.36] you read the code here in the migrate, we also 
+have this one to keep track of the last ID. So  
+[5605.6] we can now allocate ids. We also have another 
+one called codes unique where we save each ID  
+[5611.76] in a set. So now with this we can make sure 
+that we do not have duplicate IDs. All right,  
+[5617.44] but yeah, that's pretty much it. So we 
+have a bit more data here than just 16 GB,  
+[5621.92] but it does match. All right, so now we have 
+the complete database in our memory. And this  
+[5627.68] is something that you can do. All right, you can 
+move your complete MySQL or Postgress database  
+[5632.88] in your memory if you have enough RAM, which 
+in this case we have a huge amount. All right,  
+[5638.88] let's go ahead and do another test. 
+And now I'm going to say code-get
+[5646.8] and let's see how many we 
+can get. Now with Postgress,  
+[5649.76] we managed to get about half a million 
+per second. So let's give this one a shot.
+[5657.68] Whoops. Actually, I mistyped this 
+one. So, let me try it again.
+[5667.68] Yeah, code fast. I was saying code-get. Yeah, I 
+immediately noticed this one because I saw six  
+[5673.2] million per second and I thought, heck, no way. 
+All right, there we go. So now this is about  
+[5678.16] 300,000 per second which is kind of comparable to 
+the Postgress database but we don't need to now  
+[5685.36] pay a huge amount of money for the database and if 
+we now do clustering this is going to be way way  
+[5691.2] more than what it is right now. All right so now 
+you should know the importance of Redis and how  
+[5698.56] much it could save us money for a heavy route. It 
+could be a gamechanger that now instead of having  
+[5705.04] to drop thousands and probably millions of dollars 
+on your storagebased database. With this, you can  
+[5710.4] cut that down to something that's a fraction of 
+that and you can easily migrate. You can sync and  
+[5717.2] you don't need to actually move everything. You 
+can only move the tables that you know that you're  
+[5721.68] going to hit quite a lot. For example, here we're 
+building an application called weer.pro. It's a  
+[5727.04] URL shortener app. But say that we're going to 
+handle maybe I'm going to copy a link and then  
+[5732.4] we can drop it here and then shorten the link. So 
+we get a shortened link, but we've got different  
+[5738.16] custom links. So we can select maybe a six 
+character code right here. So what we can do if  
+[5743.36] we're handling 100,000 requests per second and all 
+of them are maybe this specific type of a code,  
+[5750.24] we're going to now move this whole six character 
+type in our Redis. All right. So in memory and  
+[5757.28] then we're going to have synchronization in place 
+and that migration in place as well and this is  
+[5762.24] going to be way way faster for us and would help 
+us cut costs dramatically. Now we're going to  
+[5767.84] talk about that later on. We're also building this 
+one with Cpeak. So it's going to be a lot of fun.  
+[5772.08] All right. And it's going to be a product that 
+everybody can use even if you're not technical.  
+[5775.92] So be sure to be subscribed if you want to follow 
+along with this. All right. So now what? We still  
+[5781.76] haven't hit 1 million per second here with our 
+database. So what are we going to do? Well,  
+[5787.68] I'm going to have to introduce you now to Redis 
+clustering. All right. So I want to come back  
+[5792.56] right here in my own code and show you how I'm 
+going to run it in cluster mode. So I'm going  
+[5800.0] to collapse this one and this one too and also 
+this one. All right. Okay, so now we have talked  
+[5805.44] about pretty much all these routes, but here we've 
+got yet another one code- ultra fast. All right,  
+[5811.92] with this we can now hit a million writes per 
+second. I'm not going to ruin the fun now. So  
+[5817.68] let's first talk about the Redis clustering and 
+then we'll see this in action. Now here my I'm  
+[5824.72] going to go back to my local machine. We'll then 
+come back to these power machines in a bit because  
+[5832.32] it's a little easier here for me to demonstrate 
+Redis. Now here I have added in a bash script  
+[5837.84] called Redis.sh. With this script you can easily 
+run many clusters of Redis. Okay. And here's how  
+[5847.52] you can run it. So I'm going to go ahead and run 
+this. I'll say Redis.sh and then dash setup. And  
+[5856.64] that should be pretty much it. Yep. So I'll go 
+ahead and run this. This is going to set up 30  
+[5862.88] clusters of Redis now on my machine. All right. 
+Now the clusters are created here in my activity  
+[5869.04] monitor. You can see that about 30 servers are now 
+running on my machine. So 30 different processes.  
+[5875.76] A single Redis instance is single threaded. So 
+it's not going to be able to really scale that  
+[5880.88] much. And it's going to again cap at around 100 to 
+200,000 reads and writes per second. But look at  
+[5888.4] this. We've got a huge amount right now. And with 
+this, we should be able to hit that milestone of 1  
+[5895.04] million per second. All right. Now, the thing is 
+that with cluster mode, your commands are going  
+[5901.52] to be slightly different because you got to make 
+sure that when you're doing a write, which one of  
+[5906.48] these instances is going to end up with that 
+data. All right. Yeah. So, it's not actually  
+[5913.04] that bad. Cluster mode is very smart. It does some 
+automatic hashing behind the scenes, so you don't  
+[5918.48] need to worry about it much. But still, you got to 
+take care of a few operations. Now, let's take a  
+[5923.92] look at this ultra fast code and see what we're 
+doing here. Now, first of all, we don't need to  
+[5929.12] take care of the ids ourselves. That sequential 
+ID is actually very slow because as you know,  
+[5935.28] we got to keep track of this code dash unique. So 
+that's an extra write to our Redis, right? Yeah,  
+[5942.16] I know we even got to take care of this one 
+when we are in such a massively high stake  
+[5947.2] environment. So here what I'm going to do is to 
+use crypto.randomUUID which is going to generate  
+[5954.48] a random 122bit ID, right? So kind of like MongoDB 
+if you are familiar with that. And with this now,  
+[5963.76] we don't need to worry about making sure that 
+it's unique or incrementing it one at a time.  
+[5969.2] We can be very random. And we're still saving it 
+to our queue but a little differently because we  
+[5975.52] have this shard. Now, I'm not going to explain 
+much what this does, but basically whatever data  
+[5980.48] you put here in bracket, Redis is going to hash 
+it and then end up with a number. And that number  
+[5986.0] would correspond to which one of these nodes the 
+data should go to. So if you keep this the same,  
+[5993.36] it would always go to the same node. All right. 
+So this is a major difference with Redis when  
+[6000.16] you have only one instance. So you got to take 
+care of this one as well, but it's not too bad.  
+[6004.32] You just need to change your code a little bit 
+and that's it. But now we also have this ID. The  
+[6010.8] logic is quite straightforward. And then in our 
+synchronization, now this one does not work for  
+[6015.52] a cluster mode. I did not modify it, but I may do 
+that in the future. But it's an easy change. So  
+[6021.12] yeah, going back to this. So not having to worry 
+about IDs would actually speed it up even more.  
+[6027.84] But you might be thinking, well, what if we end 
+up with a duplicate? Now, if you scroll up here,  
+[6034.64] we've got 122 bits. Again, each bit is either 
+a zero or a one. So if you want to check the  
+[6041.04] entropy, right, in simple terms, right, just if 
+you don't want to worry about any of this math,  
+[6045.68] but I've added something here for you to 
+check. So based on the birthday paradox,
+[6053.44] if you want to calculate the probability of 
+ending up with a collision, you've got this  
+[6058.32] formula. All right, this E is the Oilers's number, 
+which is this. And then N total possibilities,  
+[6064.96] which is 2 to the power of 122, and N the number 
+of UUIDs that you got to generate so that you  
+[6071.04] get a P of at least 50%. All right, so we plug in 
+50%, long story short, if you don't want to worry  
+[6077.28] about any of this math, if we keep creating at 1 
+million requests per second, it would take 86,000  
+[6085.76] years to reach a probability of at least 50% to 
+end up with a duplicate ID. All right, so yeah,  
+[6094.4] we're not going to worry about it. Now, the math 
+is very solid. Just look over it if you like,  
+[6099.6] if you know some discrete math. This birthday 
+paradox is actually a very fun problem in math.  
+[6104.8] A lot of attackers use it for hacking but yeah 
+it's very cool and yeah this is going to take us  
+[6110.96] a whole lot of time to end up with a duplicate. So 
+we can now totally get rid of that logic and for  
+[6116.0] the ids whenever we do an insert in our database 
+we can just let Postgress handle it. All right  
+[6121.92] and here we want to be extra fast. So yeah we're 
+going to now go ahead and try it with this code.  
+[6128.0] Now I'm going to go back to the beast 
+machine. So let me pull up the terminal.
+[6135.68] Now I guess I have now one instance of Redis. 
+So let me stop Redis and then because this is  
+[6143.6] now in standalone mode and we don't want it to be 
+like this. We want to have a cluster of instances  
+[6150.32] with this. You saw that we were capped at only 
+400,000 reads and for writes it was, I forgot  
+[6157.04] but something yeah 150,000 writes per second. So 
+still pretty good but we want to go at 1 million.
+[6170.88] Yeah, I'm trying to shut down my Redis server, 
+but we've got 10 million records into that. So  
+[6176.48] this would take a while. And yeah, I'm 
+going to just wait for it to finish.
+[6188.32] All right, seems like that it's now stopped. 
+There we go. All right, so now I'm going to run  
+[6192.8] that script again. Dash setup. I also need to say 
+dash prod because we've got Redis 6 right here on  
+[6199.6] this machine and this dash prod is going to use 
+Redis 6. I'm going to go ahead now and run this.
+[6207.92] Okay, now we've got all these slots ready up. 
+And now I need to also change my ecosystem config  
+[6214.72] file. So let me delete all the PM2 instances. 
+Yeah, this is this is kind of satisfying actually.  
+[6222.4] So I'm going to vim my ecosystem. So if I pass in 
+Redis cluster false, it's going to connect to a  
+[6228.8] single instance of Redis. Now if I say true it is 
+going to try to connect to all. So if I run node  
+[6235.44] cpeak.js and specify that environment variable 
+like this. So Redis cluster equals true. Here we  
+[6245.36] can see that it says Redis cluster ready and total 
+nodes is 30 masters 15 and replicas 15. All right  
+[6253.36] let's see what this means. Just a quick recap. 
+Let's try to have this picture in mind that we've  
+[6258.88] got our hardware right here. We've got that main 
+node instance on port 3000 and we've got 127 more  
+[6267.28] node instances right here. Absolutely massive. 
+And this is how we're handling the traffic,  
+[6272.4] right? We keep sending data from the internet. 
+So when we run autocannon, they all end up here  
+[6277.2] in this main parent node and then the traffic is 
+distributed across the node processes. All right.  
+[6283.68] Now when we were connecting to our database, we 
+were again reaching out through this network card  
+[6289.04] through another machine to grab some data. All 
+right. And the data on that machine itself was  
+[6295.84] sitting on the storage. All right. So now what 
+we want to do is that we want all these processes  
+[6303.52] to only reach out to the RAM right here. So 
+we have our Redis instance on this RAM and  
+[6310.0] we've got a whole bunch of them, right? So here 
+let's just take a look at our RAM and also just  
+[6315.84] zoom in on one node process. Let's say that this 
+node process wants to get code with this ID. All  
+[6322.4] right. Now you saw that we had 15 masters and 
+also 15 replicas. So each master has a replica  
+[6329.52] meaning a copy of itself. So if one goes down it 
+can easily copy itself. All right. Redis cluster  
+[6336.0] is actually very very smart. So what happens 
+here? Here I have this ID in bracket. It would  
+[6342.08] reach out to Redis and Redis is going to hash the 
+content inside and come up with a number that maps  
+[6348.24] to one of these instances, right? Let's say maybe 
+this one. So now Redis knows that this particular  
+[6354.4] data is sitting on this instance. So it's going 
+to reach out to it and then grab the data. So  
+[6361.12] we're going to end up with the actual data right 
+here and then it is sent back to the node process.  
+[6368.32] All right. So, it's pretty straightforward 
+actually. Let's go ahead and try it now. So,  
+[6372.8] we're now connected to all these nodes. All 
+right. We've got 15 masters. We do the writes  
+[6377.84] to the masters, but we can also read from the 
+replicas. All right. So, I'm going to exit out and  
+[6383.12] then run my application with PM2 to utilize all 
+the CPU power. So, I'll say PM2 start ecosystem.
+[6392.4] And there we go. And now the moment of 
+truth. Let's see if we can hit 1 million. So,  
+[6397.92] I'm going to go ahead and run this again to code 
+ultra-fast and it's going to be a post request.
+[6408.4] So, let's see what's going to happen. I'll go 
+ahead and start it here in the tester and also  
+[6413.76] the power CPU. Well, all right. So, power idle 
+CPU is now pretty much close to zero. Not 100%  
+[6420.08] zero because it's very memory intensive, 
+but you can see it's very, very low. All  
+[6424.96] right. So, we don't have pretty much anything 
+idle. Our complete CPU, all these cores are now  
+[6430.16] being utilized for this one. And take a look at 
+this. All right. There we go. 1 million requests  
+[6435.84] per second. This means that we managed to write to 
+our database a million times per second. Hooray.  
+[6443.12] We we reached this objective of handling a million 
+requests per second while having a database. Now,  
+[6449.92] again, we're going to do this synchronization 
+maybe overnight. So we've got all the  
+[6454.56] ids. So all we got to do is read all of them 
+and then in batches write to our database.  
+[6460.32] But this route right here, thanks to Redis and 
+not just Redis but Redis with cluster mode can  
+[6467.52] handle a million requests per second without 
+costing millions of dollars. All right. Now,  
+[6475.04] I realize that what we're doing here is very 
+straightforward, but you can kind of imagine  
+[6479.28] that even if the data was larger than this, it 
+would still work. You know, yeah, sure, maybe you  
+[6484.32] got to add in a little bit more CPU cores. If you 
+have more data, maybe increase your RAM by a bit,  
+[6490.08] but worst case scenario, you're going to end up 
+with maybe another one of these power machines  
+[6494.0] that's going to cost another five grand, but 
+nowhere close to billions of dollars with Open  
+[6500.64] Weather Map or with millions of dollars with maybe 
+some of the other APIs that we looked at. Okay,  
+[6506.08] so that's pretty cool. Now, this is only write 
+though, but if we can write a million times,  
+[6511.68] of course, we can also read a million times. 
+The point is that this now works. Let's keep  
+[6517.04] sending it another time. It's very satisfying to 
+take a look at this. And then I'm also going to  
+[6521.52] monitor all the CPU usages of my node processes. 
+And you can see that they are also at full power.  
+[6526.64] Right? So all these processes are now kicking in 
+to handle all these requests. Now sometimes they  
+[6532.48] are at 50% because now Redis is going to kick 
+in to take up the rest of the CPU. But yeah,  
+[6538.72] that's pretty cool. We're now handling a whole 
+lot of requests and we are at this 1 million. I  
+[6545.12] can keep on sending this over and over again and 
+it's going to be more than a million per second.
+[6555.6] Now, if you want to go into your Redis cluster and 
+then take a look at keys all, it could be a little  
+[6560.88] daunting, but you could do so with this command. 
+So, you say --cluster. Now, this is going to be  
+[6566.56] huge. Like, we've got millions of records here. 
+I don't even think that this could actually work.  
+[6571.04] But yeah, there you go. So, all the codes are now 
+here. It's It's a lot. It's a lot of codes. We've  
+[6576.88] got at least 60 million records right now in 
+the Redis instance. And let's also take a look  
+[6583.36] at our memory usage. And oh, look at this. We have 
+100 GB used up. All right. We're almost there to  
+[6592.24] completely use up the complete memory that we've 
+got on this massive machine. All right. Okay,  
+[6597.36] so we soon need to maybe get a terabyte of RAM. 
+All right, so that's another problem right here.  
+[6602.96] If we are getting a million requests per second 
+and we're saving it all to our memory, we got  
+[6607.6] to quickly free it up. All right, maybe do that 
+batching to Postgress or write them to disk or  
+[6613.84] something and then handle it again. So if I keep 
+just doing this, I think every time it's going  
+[6618.96] to add a huge amount to our database. Every time 
+it's going to add in at least 20 million, right?  
+[6626.56] So this is I think the fifth time that I'm running 
+this. So we're going to end up with a 100 million  
+[6631.6] records in our database. That's huge. And we're 
+doing it in pretty much instant time. You saw  
+[6636.4] that with Postgress. This took us a huge amount of 
+time to just add in 10 million. It took us close  
+[6643.52] to half an hour. With this, it's very fast. Of 
+course, we're we're almost running out of memory,  
+[6650.0] but but you get the point. We can at least handle 
+a million per second. So you can now see how how  
+[6656.56] intense it is to do 1 million requests per 
+second. It's no joke. A simple mistake here  
+[6662.32] could be absolutely costly. We're talking like 
+tens of thousands of dollars. You saw here with  
+[6668.8] this SQL code that if we were to go with version 
+one and and you were under the impression that  
+[6676.32] we just need to scale up the database instead of 
+trying to speed up the code. Yeah. This would have  
+[6680.72] been a disaster. Now I know I know this is a very 
+simple example but it happens countless times in  
+[6686.8] production that people don't try to worry about 
+increasing the speed of the code and they would  
+[6692.32] just say oh let's try maybe just do horizontal 
+scaling or something like that. All right I need  
+[6699.12] to take a break. It's been quite stressful doing 
+this video. I need to be very careful. I haven't  
+[6704.0] even taken a launch break because every hour 
+it's costing me close to 20 bucks to just keep  
+[6709.28] these servers running. So, now that we are at this 
+point, yeah, I want to take a break and I'll come  
+[6713.92] back here. But we had a lot of fun doing this. 
+So, hopefully you've also learned quite a bit.
+[6733.84] All right, I got one more thing to show you and 
+that is that I have found out how to reach a  
+[6739.76] million requests per second with this patch 
+request without breaking the bank. I mean,  
+[6745.04] sure, you can infinitely always launch more 
+powerful computers, but I also wanted to do  
+[6749.2] it in a way to keep costs down. All right, so let 
+me show you what I've done. So, I've gone ahead  
+[6754.16] and launched two more servers. Now these are very 
+powerful about 1.5 times more powerful than the  
+[6761.2] power servers and I'm calling these beasts. 
+All right, so beast tester and beast server  
+[6767.84] one. Let's take a look at the config of this 
+one. So recall that this is what we had before  
+[6773.36] with C8i32xlarge and also my own Mac Studio. Now 
+these beast machines are called C8GN.48xlarge.
+[6782.88] The N stands for networking. All right. So, it's 
+pretty much similar to this one, but 1.5 times  
+[6789.36] larger, and it's very network optimized, which 
+is something that we want. It has 192 CPU cores,  
+[6796.16] 384 GB of RAM, and a massive 600 Gb per second. 
+All right, this is unbelievable. And it's far  
+[6805.68] more than I can even imagine. So, we're going 
+to put this into use and see what's going to  
+[6809.76] happen. And also, the price is about two times 
+more than this. So around $11 an hour or $8,000  
+[6817.6] a month. Okay. So here in the cost estimator I 
+have selected this instance and I have two of  
+[6824.0] these machines running. One for the testing and 
+one for the server. And the monthly cost right  
+[6829.36] now for these alone is around 17 grand a month. I 
+also tried it with 24xlarge but I couldn't get to  
+[6837.2] that 1 million. So we need a little bit more CPU 
+power to really hit that. All right. So I have  
+[6842.4] gone ahead and logged into these machines. So 
+here I've got my beast server one and here's my  
+[6848.56] tester terminal. All right. So I've gone ahead and 
+started node. You can see that I've got a whole  
+[6853.76] lot of them. 180. All right. So I'm not going to 
+start 192. We want to keep a few cores not being  
+[6860.8] fully utilized. So let's go ahead and give it a 
+shot. And I want to start with this command. All  
+[6866.4] right. So I'm going to run this method patch. 
+the exact same stuff that we've got as before,  
+[6871.84] but I'm reducing down the pipelining quite a bit 
+to only 20 and also the duration to 60 cuz we're  
+[6878.56] moving a huge amount over the network. We need 
+to let it to kind of warm up a bit. So yeah,  
+[6884.64] let's try it with 1 minute. And I'll go ahead 
+now and run it. And here in the CPU usage,  
+[6892.08] it should go down anytime now. All right, it might 
+take a little bit, but there we go. So now 4% and  
+[6898.56] it's going to stop around here because we've got 
+a few cores that we're not utilizing now. Yeah,  
+[6903.68] we're moving a huge amount of data right now over 
+the network and let's see what's going to happen.
+[6915.6] All right, let's take a look and see what we've 
+got now. CPU usage again was fully being utilized,  
+[6921.52] but the network was not being fully utilized. 
+Sure, we moved across 20 plus gigabytes per  
+[6927.92] second, which is a whole lot. 20 time 8, so 160 
+gigabit per second. All right, so this is still  
+[6935.68] quite a lot, way more than what we had here with 
+this machine. So this machine C8i could have not  
+[6941.92] managed this amount of traffic. It would have 
+capped at 50 Gb, but yeah, here we are reaching  
+[6948.32] 160. But still so far away from reaching that 600 
+of the beast machine's network speed. So we still  
+[6956.24] can go way more than this. But you saw that we 
+actually hit a limit here with our CPU. So yeah,  
+[6962.08] node here is struggling quite a bit. What we could 
+do is to launch a server that's even more powerful  
+[6967.52] than this one. Something that's got maybe 300 
+cores. And actually, I went ahead and I tried it,  
+[6973.2] but I still couldn't get it to 1 million because 
+apparently this massive amount of work to all this  
+[6979.44] traffic ending up in the parent process and then 
+getting distributed across all the child processes  
+[6984.64] is just too much. And that overhead is not going 
+to allow us to get into 1 million per second. All  
+[6990.4] right, so yeah, Node kind of failed me here at 
+this. And don't even think about trying it with  
+[6995.76] Express. And you know what? Why not? Let's let's 
+try it with Express as well. So I'll delete all
+[7004.0] and then I'll try it here with express PM2 start 
+ecosystem and I going to run the test again. I  
+[7013.92] need to change my port to port 3001 because that 
+what my express server listens on. All right. So  
+[7022.48] this one should now kick in. Okay, there we go. 
+It's going down to 5%. All right. All right. As  
+[7034.24] you can see here with Express, we can barely 
+even get into half a million. All right. So,  
+[7039.52] yeah, with Express, there's no way that we can 
+reach a million with this. It's too slow. But  
+[7044.48] with Cpeak or Fastify, we can get very close. 
+All right, we're getting we're almost there. We  
+[7049.76] just need to push it a little further until 
+we get into a million per second. But what  
+[7056.0] can we do? We need more CPU and I'm not going to 
+launch a more powerful machine and even if I do,  
+[7062.32] it's still not really going to work because 
+we have a lot of overhead. All right,  
+[7066.88] Node and JavaScript in general or Python and 
+Java, these are not very suitable for these  
+[7073.76] extreme cases. Okay, because we're doing quite 
+a bit of CPU operations here in this handler,  
+[7080.4] right? We're doing a few checks. We're doing 
+some string manipulations and generating some  
+[7085.76] amount of data. So whenever you're doing some CPU 
+intensive operations in a language like Python,  
+[7091.2] JavaScript or Java, you probably would see a good 
+improvement if you switch to something like C,  
+[7098.24] C++ or Rust. And that's what we're going to 
+do. I'm going to now run this application,  
+[7104.8] but using one of the fastest web frameworks in 
+the world which is called Drogon or Drogon. And  
+[7112.16] I've got that code right here. So I've gone ahead 
+and rewritten this application in C++. And let's  
+[7120.24] go ahead and see if we can run it. So here in my 
+beast server, I'm going to delete my PM2 servers.
+[7131.12] And then right here, yeah, I've been trying it 
+with a few different technologies like Go, Rust,  
+[7136.0] and Java, but even Python, but I only managed to 
+get into this 1 million with C++. And even this  
+[7143.52] one was actually tricky. I tried it with this 
+Drogon, which is actually one of my favorite  
+[7149.36] frameworks of all time. And by default, it was 
+far even slower than Node.js. It was four times  
+[7156.4] slower than Node.js. And the reason was the JSON 
+parser, the default JSON parser of this Drogon was  
+[7165.04] actually slower than the V8 one. All right. 
+Now, don't worry if you don't know anything  
+[7169.44] about C++. This is just like the same concept. 
+All right. If you've been following along with  
+[7175.36] the Cpeak development and also you know some 
+C++, I can guarantee you that you're going to  
+[7180.24] learn this framework in no time. All right. 
+It's all the same concepts. We have already  
+[7184.24] mastered all the fundamentals and core concepts. 
+So here, yeah, we're just doing the same things,  
+[7189.44] setting the headers and setting the response 
+body, reading from the request and all that  
+[7194.4] kind of stuff that you should know if you know 
+enough of backend engineering. All right, so yeah,  
+[7199.28] pretty straightforward here, but I had to play 
+around with this code and keep optimizing it until  
+[7204.48] I managed to get into 1 million. So back to this 
+JSON thing. The Drogon one was quite slow, so I  
+[7211.84] had to go with Rapid JSON, which is right now one 
+of the fastest JSON parsers in the world. It's not  
+[7218.4] the fastest. There's still another one that's even 
+faster than this. And I could have gone with that,  
+[7223.2] but with this, I got to a point of optimization 
+that I hit finally that 1 million and I called it  
+[7229.2] a day. All right, but I can guarantee you that we 
+can go ahead and speed up this code even more than  
+[7234.72] what we've got. All right, let's go ahead and run 
+it. It's It's quite interesting. And yeah one more  
+[7240.72] point here at the end I am setting my threads. 
+So with this the application the framework itself  
+[7247.92] is going to handle the threading. All right so we 
+don't need to use something like PM2 here in this  
+[7252.8] case and also I am disabling the compression and 
+logging. All right just so that we have something  
+[7259.12] very similar to our node application. In the real 
+world, you should definitely use compression. But  
+[7264.4] because we want to simulate here having a request 
+that is 30 kilobytes, I'm going to disable it  
+[7269.44] because if we do end up enabling compression on 
+this response, it is just going to be nothing. All  
+[7275.28] right, it's right now 30 kilobytes, but because we 
+have a huge amount of repetition in this response,  
+[7280.96] compression is going to reduce it to only 1 
+kilobyte. All right, so yeah, we don't want  
+[7284.56] to do that and because we're testing of course, 
+but in the real world, you got to do compression.  
+[7289.92] I will also put a link to this project down below. 
+So if you know C++ feel free to check it out.  
+[7296.32] Okay. So let's go ahead and run it here in the CPP 
+1 million. I have written another bash script that  
+[7305.76] I can easily use to build this project. Right? 
+So all I got to do here is say Redis excuse me  
+[7312.88] do. All right it's called do and then run. Right? 
+That's it. That's all I got to do here. So it's  
+[7318.16] going to now build the project and the server is 
+actually running but I have disabled the logging  
+[7323.92] again. It's going to log that the server is now 
+running on this port but I wanted to disable all  
+[7329.12] the logs to get the maximum amount of performance. 
+All right. So here in the configjs I have disabled  
+[7334.72] the logging and also that compression. Okay. So 
+with this in place here's also our CPU usage. I'm  
+[7343.28] going to run this test again. And I got to change 
+the port now to 5555. Okay. All right. Let's see  
+[7354.16] what's going to happen. Okay. It's now fired 
+up. Again, it would take a little while for it  
+[7358.88] to kind of move all this traffic to this server. 
+Okay. There we go. So, the CPU is going to be idle  
+[7366.56] at around 30%. It's not going to go any lower than 
+that because I'm guessing we're hitting actually a  
+[7372.48] limit with the network card itself. Well, not the 
+network speed, but yeah, this is kind of confusing  
+[7378.24] why I was not able to get it further than this. 
+But you know what? Because I hit that 1 million,  
+[7383.44] I I said, "Yeah, okay, this is good enough." But 
+we can certainly utilize more CPU. Okay. Now,  
+[7389.68] if I show you the CPU usage of the process, I'll 
+run the top command. Yeah, here's the CPP server.  
+[7396.8] It's utilizing a huge amount of CPU but not a lot 
+of memory. All right, so the memory usage here is  
+[7402.16] incredibly low. This is also our idle CPU here in 
+the top command. But yeah, I realize that it's a  
+[7407.92] whole lot of text here to take a look at. So let 
+me exit out and do that CPU usage instead. Oh,  
+[7414.0] it's done. And look at this. So we ran it for 60 
+seconds and the average is 1 million per second.  
+[7422.64] All right. And we even gotten to a million 
+and 200,000 requests per second. And it's  
+[7429.84] pretty consistent. All right. So 50% of the 
+time we've been hitting this 1 million. Yeah,  
+[7434.8] sure. It also was 31,000, especially at the 
+beginning. And again, this is what I think is  
+[7441.2] that warming up because we're moving an insane 
+amount of traffic. Hopefully you realize how  
+[7446.56] significant this is. This is 38 GB per second. 
+This is this is absurd. 38 * 8 is it's 300 gigabit  
+[7458.96] per second. Now if I let me open up an application 
+called blackmagic. So the disk speed of my Mac  
+[7468.88] studio right now if I start it is around 3 GB per 
+second. Right. The read is around 5 GB. All right.  
+[7475.44] So five. All right. Five five GB per second. and 
+it is considered a pretty fast SSD. All right,  
+[7481.76] it's still really fast and it's only 5 GB. Now, 
+here the network is actually eight times faster  
+[7492.24] than my disk. This is just unbelievable. This is 
+on a whole other level. I've never dealt with a  
+[7498.8] network this fast and we're utilizing it. Here, if 
+you take a look, two terabytes of data. Now this  
+[7505.68] is actually the application layer transfer data 
+size. So the actual one is a bit higher than this  
+[7510.64] if you also count in the TCP packets and whatnot. 
+But 2 terabytes in just 1 minute is just insanely  
+[7519.28] fast. It's like you have a disk that's 2 TB, an 
+SSD disk, and you copy it to another disk that's  
+[7527.44] 2 TB and you do that process in one minute. All 
+right. This is just speed on a whole other level.  
+[7534.48] And we managed to get to 1 million here with C++. 
+Now, yeah, this Drogon is so powerful. C++ is just  
+[7544.4] so powerful with this framework here and Node.js, 
+I personally feel unstoppable, and I'm sure you  
+[7550.88] would too if you learn it because this is so 
+incredibly fast, so incredibly powerful. And  
+[7556.24] whenever you want to have a lot of power and a 
+lot of speed, you would use Drogon. And whenever  
+[7561.12] you want to have development speed, you would use 
+Node.js. And then you can have an Nginx running on  
+[7565.68] top of your server, have some routes written here 
+in C++ and some routes in Node. And with this, you  
+[7572.32] can literally do whatever that you can possibly 
+imagine. There's nothing that's stopping you here  
+[7577.84] with C++. You can create a full-blown operating 
+system with it. So yeah, now again, we can utilize  
+[7583.92] this probably more because you saw that we had a 
+whole lot of idle CPU at 30%. So yeah, we've been  
+[7590.96] utilizing only 70% of our CPU and still achieved a 
+much better performance compared to Node.js. So if  
+[7598.4] I scroll up here, well, let's not worry about the 
+express, but here with raw Node.js, with Cpeak,  
+[7604.88] you can see we've got about a 30% boost in 
+the requests per second and still we've been  
+[7611.2] utilizing far less CPU. All right, with node we 
+were utilizing our whole CPU, but here with C, we  
+[7618.16] were only using 70%. All right, it's this is quite 
+significant and this is why you'd actually see  
+[7623.36] that the companies who do have such massive amount 
+of traffic like millions of requests per second,  
+[7628.88] they don't use things like Python or Node usually 
+for those cases unless it's very very heavily IO  
+[7635.36] dependent. We probably won't see much difference. 
+If we do the SQL routes here with this C++ code,  
+[7641.76] it would be pretty much the same because we were 
+really bounded by SQL. Same with Redis. Yeah,  
+[7646.56] we can of course also connect Redis and Postgress 
+here to this code and it's actually really easy  
+[7651.04] to do that. Redis itself is written in C. So 
+yeah, we can totally do that. There's nothing  
+[7655.68] that's stopping us. We're communicating over 
+the network. So you can use it with whatever  
+[7659.12] language that you'd like. Now, I was also 
+interested to see what's going to happen if  
+[7664.16] we put a load balancer on top and see if we can 
+really utilize the remaining 30%. But it turned  
+[7671.2] out to be actually not quite the case. So, 
+I also went ahead with a load balancer. So,  
+[7675.84] I set up two of those beast machines and still 
+really I couldn't get to that point because I'm  
+[7682.08] guessing, you know, when you reach such an 
+insane traffic, 300 Gbit per second. Yeah,  
+[7688.16] probably Amazon itself was putting a limit on us. 
+This load balancer apparently we got to contact  
+[7693.68] the Amazon customer service here and tell them 
+that we want to have some unbelievable amount of  
+[7698.8] traffic. So, give us a little bit more resources. 
+But on its own, even on the internal scheme,  
+[7704.8] I could not really get it. Also, it could be the 
+case that we need to tweak the system here. So,  
+[7709.92] we got to probably run a few terminal commands and 
+make sure that our Linux machine can handle such a  
+[7715.28] massive amount of traffic. That's another one of 
+my guesses that the limit that we can't utilize  
+[7720.4] the other 30% is because the Linux machine itself 
+is actually limiting us either here on this server  
+[7726.96] or here on this tester. Right? All right, so 
+that could be the case, too. But yeah, I'm going  
+[7731.68] to call it a day now. All right, we've been doing 
+enough testing and we also finally managed to get  
+[7736.8] into 1 million even with this patch route. Well, 
+actually, I really wanted to end this video right  
+[7744.24] there, but I had a tough time sleeping last night 
+because I this 30% that we were not utilizing was  
+[7749.76] constantly bothering me. So, I decided to go for 
+one final test, one big test to end them all. So,  
+[7757.76] I decided to take another approach and instead 
+of having one beast server, have multiple small  
+[7763.84] ones. I really tried hard to get it to 0% of 
+idle CPU with that beast server. But turns out  
+[7769.92] that actually the tester itself is hitting a limit 
+that it can't open up enough connections to really  
+[7776.88] utilize the rest of the power of the server. 
+So, here I want to show you what I've done here  
+[7782.32] for this next test. Now, I'm doing a commentary on 
+myself. So, I recorded this. I didn't talk because  
+[7788.32] I thought it's not really going to work, but just 
+in case it would work, I'm going to have this. But  
+[7792.72] yeah, it did end up working. So, here I'm going to 
+go ahead and launch a few small instances instead  
+[7798.16] of one big one. So, I have created one image. 
+And I selected it. I'm going to go here with  
+[7804.08] C8gn.2xlarge. It has only eight CPU cores and 16 
+GB of RAM. and the other stuff just like before.
+[7816.24] Now here in the advance I'm going to 
+select this IAM thing so that we can  
+[7820.48] do some extra stuff like pushing the logs to 
+another machine and also I'm going to select  
+[7824.88] the placement group so that the servers 
+are going to be close to one another.
+[7832.8] Now here I'm trying to give it a tag but 
+actually I really didn't need to do this.  
+[7836.64] All right. Now here's the fun part. I'm going to 
+now launch 100 of these machines. So, I put 100,  
+[7843.04] clicked on launch, but it didn't actually work 
+because we hit a limit with Amazon. And the limit  
+[7849.28] is 800 CPU cores per region. The default one 
+is actually 32, but I ended up sending a lot  
+[7854.88] of requests to increase it over time. But yeah, 
+800 didn't work. So, now I'm going to try 80.  
+[7860.64] Still didn't work. And I guess at this point, 
+I'm trying to figure out what to put. So, I'm  
+[7866.4] trying to do a bit of math to see how many more 
+we can go with. So, but I guess I ended up Yeah,  
+[7872.48] I gave up. Tried to brute force and then maybe go 
+with Yeah, here. Yeah, 60 would actually work. So,  
+[7878.16] 60 computers all launched and yeah, take a 
+look at this. This log is it's so massive. So,  
+[7886.8] all these computers are now running and we've got 
+a whole bunch of them. Just take a look at this.  
+[7892.48] lots and lots of computers waiting for all 
+of them to initialize. It would take a couple  
+[7897.68] minutes so I had to wait for it. Now here I want 
+to show you how much it costs. So c8gn.2xlarge
+[7905.92] and we have 60 of them. So per month this 
 costs $20,000 just for the testers. All right,  
 [7914.0] or about 30 bucks an hour or 40 bucks I guess with 
 that beast server in place. All right, so here I  
